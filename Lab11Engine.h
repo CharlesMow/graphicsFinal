@@ -137,6 +137,7 @@ private:
 
     /// \desc shader program that performs Texture Shading
     CSCI441::ShaderProgram* _textureShaderProgram;
+    CSCI441::ShaderProgram* _wavyShaderProgram;
     /// \desc stores the locations of all of our shader uniforms
     struct TextureShaderProgramUniformLocations {
         /// \desc precomputed MVP matrix location
@@ -146,6 +147,11 @@ private:
         /// \desc color tin location
         GLint colorTint;
     } _textureShaderProgramUniformLocations;
+    struct WavyShaderProgramUniformLocation{
+        GLint mvpMatrix;
+        GLint color;
+        GLint time;
+    } _wavyShaderProgramUniformLocations;
     /// \desc stores the locations of all of our shader attributes
     struct TextureShaderProgramAttributeLocations {
         /// \desc vertex position location
@@ -153,7 +159,9 @@ private:
         /// \desc vertex texture coordinate location
         GLint vTexCoord;
     } _textureShaderProgramAttributeLocations;
-
+    struct WavyShaderProgramAttributeLocations{
+        GLint vPos;
+    } _wavyShaderProgramAttributeLocations;
     //***************************************************************************
     // Private Helper Functions
 

@@ -4,6 +4,7 @@
 #include <CSCI441/TextureUtils.hpp>
 
 #include <cmath>
+#include <ctime>
 
 //*************************************************************************************
 //
@@ -117,13 +118,18 @@ void Lab11Engine::mSetupShaders() {
     // Setup Gouraud Shader Program
 
     _textureShaderProgram = new CSCI441::ShaderProgram("shaders/textureShader.v.glsl", "shaders/textureShader.f.glsl" );
+    _wavyShaderProgram = new CSCI441::ShaderProgram("shaders/wavy.v.glsl","shaders/wavy.f.glsl");
     // get uniform locations
     _textureShaderProgramUniformLocations.mvpMatrix    = _textureShaderProgram->getUniformLocation("mvpMatrix");
     _textureShaderProgramUniformLocations.diffuseMap   = _textureShaderProgram->getUniformLocation("diffuseMap");
     _textureShaderProgramUniformLocations.colorTint    = _textureShaderProgram->getUniformLocation("colorTint");
+    _wavyShaderProgramUniformLocations.mvpMatrix = _wavyShaderProgram->getUniformLocation("mvpMatrix");
+    _wavyShaderProgramUniformLocations.time = _wavyShaderProgram->getUniformLocation("time");
+    _wavyShaderProgramUniformLocations.color = _wavyShaderProgram->getUniformLocation("color");
     // get attribute locations
     _textureShaderProgramAttributeLocations.vPos       = _textureShaderProgram->getAttributeLocation("vPos");
     _textureShaderProgramAttributeLocations.vTexCoord  = _textureShaderProgram->getAttributeLocation("vTexCoord");
+    _wavyShaderProgramAttributeLocations.vPos = _wavyShaderProgram->getAttributeLocation("vPos");
 
     // set static uniforms
     _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.diffuseMap, 0 );
@@ -139,6 +145,7 @@ void Lab11Engine::mSetupShaders() {
     CSCI441::setVertexAttributeLocations(_textureShaderProgramAttributeLocations.vPos,
                                          -1,
                                          _textureShaderProgramAttributeLocations.vTexCoord);
+    CSCI441::setVertexAttributeLocations(_wavyShaderProgramAttributeLocations.vPos, -1, -1);
 }
 
 void Lab11Engine::mSetupBuffers() {
@@ -288,9 +295,14 @@ void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     // Draw Marbles
 
     glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::MARBLE_TEX] );
+    _wavyShaderProgram->useProgram();
+    glProgramUniform3f(_wavyShaderProgram->getShaderProgramHandle(),
+                       _wavyShaderProgramUniformLocations.color, 0.0,0.0,1.0);
+    glProgramUniform1f(_wavyShaderProgram->getShaderProgramHandle(),
+                       _wavyShaderProgramUniformLocations.time,glfwGetTime());
     for(unsigned int i = 0; i < _numMarbles; i++) {
-        _marbles[i]->draw( _textureShaderProgram,
-                           _textureShaderProgramUniformLocations.mvpMatrix, _textureShaderProgramUniformLocations.colorTint,
+        _marbles[i]->draw( _wavyShaderProgram,
+                           _wavyShaderProgramUniformLocations.mvpMatrix, _wavyShaderProgramUniformLocations.color,
                            modelMatrix, projectionViewMatrix );
     }
 }
