@@ -67,6 +67,9 @@ private:
     /// \desc generates a random value within the range [0.5f, 1.0f]
     /// \returns random value within the range [0.5f, 1.0f]
     static GLfloat _genRandColor();
+    void _drawBody(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation, glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
+    void _drawFins(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation, glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
+    void _drawEyes(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation, glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
 };
 
 #endif // LAB11_MARBLE_H

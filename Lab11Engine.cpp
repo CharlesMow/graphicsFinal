@@ -4,8 +4,8 @@
 #include <CSCI441/TextureUtils.hpp>
 
 #include <cmath>
+#include <time.h>
 #include <ctime>
-
 //*************************************************************************************
 //
 // Helper Functions

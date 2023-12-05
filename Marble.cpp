@@ -31,24 +31,83 @@ void Marble::setDirection(glm::vec3 newDirection) { _direction = glm::normalize(
 
 void Marble::draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint comUniformLocation, glm::mat4 modelMtx, glm::mat4 projViewMtx ) {
     glm::vec3 rotationAxis = glm::cross( _direction, CSCI441::Y_AXIS );
-
     modelMtx = glm::translate( modelMtx, _location );
-    modelMtx = glm::translate( modelMtx, glm::vec3(0, RADIUS, 0 ) );
-    modelMtx = glm::scale(modelMtx, glm::vec3(0.5,1.0,4));
-    modelMtx = glm::rotate( modelMtx, _rotation, rotationAxis );
-    glm::mat4 mvpMatrix = projViewMtx * modelMtx;
+     glm::mat4 mvpMatrix = projViewMtx * modelMtx;
     shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
-    float side_length =3;
-    CSCI441::drawSolidCube(side_length);
+    modelMtx = glm::translate( modelMtx, glm::vec3( 0, RADIUS, 0));
+    _drawBody(shaderProgram, mvpUniformLocation, colorUniformLocation, modelMtx, projViewMtx);
+    _drawFins(shaderProgram, mvpUniformLocation, colorUniformLocation, modelMtx, projViewMtx);
+    _drawEyes(shaderProgram, mvpUniformLocation, colorUniformLocation, modelMtx, projViewMtx);
+
 }
 
+void Marble::_drawBody(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+                       glm::mat4 modelMtx, glm::mat4 projViewMtx) const{
+    modelMtx = glm::scale ( modelMtx, glm::vec3(1.5, 1, 1));
+    modelMtx = glm::rotate( modelMtx, (float) M_PI_2, CSCI441::X_AXIS );
+    glm::mat4 mvpMatrix = projViewMtx * modelMtx;
+    shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
+
+    shaderProgram->setProgramUniform(colorUniformLocation, COLOR );
+
+    CSCI441::drawSolidCylinder(RADIUS*0.875, RADIUS, 0.2, 16, 16);
+
+    modelMtx = glm::rotate( modelMtx, (float) -M_PI_2, CSCI441::X_AXIS);
+    mvpMatrix = projViewMtx * modelMtx;
+    shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
+    CSCI441::drawSolidDisk(0, RADIUS*0.875, 16, 16);
+
+    modelMtx = glm::translate( modelMtx, glm::vec3(0, 0, 0.2));
+    modelMtx = glm::rotate( modelMtx, (float) M_PI_2, CSCI441::X_AXIS );
+    mvpMatrix = projViewMtx * modelMtx;
+    shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
+    CSCI441::drawSolidCylinder(RADIUS, RADIUS*0.875, 0.2, 16, 16);
+
+    modelMtx = glm::rotate( modelMtx, (float) -M_PI_2, CSCI441::X_AXIS);
+    modelMtx = glm::translate( modelMtx, glm::vec3(0,0,0.2));
+    mvpMatrix = projViewMtx * modelMtx;
+    shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
+    CSCI441::drawSolidDisk(0, RADIUS*0.875, 16, 16);
+}
+
+void Marble::_drawFins(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+                      glm::mat4 modelMtx, glm::mat4 projViewMtx) const{
+    modelMtx = glm::translate( modelMtx, glm::vec3(0,0,0.4));
+    shaderProgram->setProgramUniform(colorUniformLocation, COLOR );
+
+    modelMtx = glm::translate( modelMtx, glm::vec3( -RADIUS/4, RADIUS/6, -0.2));
+    modelMtx = glm::scale( modelMtx, glm::vec3( 1, 1.5, 0.2));
+    modelMtx = glm::rotate( modelMtx, glm::radians(15.f), CSCI441::Z_AXIS);
+    glm::mat4 mvpMatrix = projViewMtx * modelMtx;
+    shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
+    CSCI441::drawSolidCylinder( RADIUS/2, RADIUS/4, RADIUS, 16, 16);
+
+    modelMtx = glm::translate( modelMtx, glm::vec3( 0, -RADIUS/3, 0));
+    modelMtx = glm::rotate( modelMtx, (float) M_PI, CSCI441::X_AXIS);
+    modelMtx = glm::rotate( modelMtx, glm::radians(30.f), CSCI441::Z_AXIS);
+    mvpMatrix = projViewMtx * modelMtx;
+    shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
+    CSCI441::drawSolidCylinder( RADIUS/2, RADIUS/4, RADIUS, 16, 16);
+}
+
+void Marble::_drawEyes(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+               glm::mat4 modelMtx, glm::mat4 projViewMtx) const {
+    shaderProgram->setProgramUniform(colorUniformLocation, glm::vec3(0,0,0) );
+    modelMtx = glm::translate( modelMtx, glm::vec3( 3*RADIUS/4, 0, 0));
+    glm::mat4 mvpMatrix = projViewMtx * modelMtx;
+    shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
+    CSCI441::drawSolidSphere( 0.2, 16, 16 );
+    modelMtx = glm::translate( modelMtx, glm::vec3(0, 0, 0.4));
+    mvpMatrix = projViewMtx * modelMtx;
+    shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
+    CSCI441::drawSolidSphere( 0.2, 16, 16 );
+}
 void Marble::moveForward() {
     _location += _direction * SPEED;
-    /*
-    _rotation -= SPEED;
-    if( _rotation < 0.0f ) {
-        _rotation += 6.28f;
-    }*/
+    //_rotation -= SPEED;
+    //if( _rotation < 0.0f ) {
+    //    _rotation += 6.28f;
+    //}
 }
 
 void Marble::moveBackward() {
@@ -58,6 +117,10 @@ void Marble::moveBackward() {
     if( _rotation > 6.28f ) {
         _rotation -= 6.28f;
     }*/
+    //_rotation += SPEED;
+    //if( _rotation > 6.28f ) {
+    //    _rotation -= 6.28f;
+    //}
 }
 
 GLfloat Marble::_genRandColor() {
