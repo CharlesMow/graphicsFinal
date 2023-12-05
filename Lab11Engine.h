@@ -150,6 +150,8 @@ private:
     struct WavyShaderProgramUniformLocation{
         GLint mvpMatrix;
         GLint color;
+        GLint shouldMove;
+        GLint typeBodyPart;
         GLint time;
     } _wavyShaderProgramUniformLocations;
     /// \desc stores the locations of all of our shader attributes

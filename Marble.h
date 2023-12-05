@@ -50,7 +50,8 @@ public:
     /// \param colorUniformLocation uniform shader location for the Color Tint
     /// \param modelMtx model matrix containing any transformations already applied
     /// \param projViewMtx precomputed ViewProjection matrix
-    void draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation, glm::mat4 modelMtx, glm::mat4 projViewMtx );
+    void draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+               GLint shouldMoveUniformLocation,GLint typeBodyPart, glm::mat4 modelMtx, glm::mat4 projViewMtx );
     /// \desc rolls the sphere forward one unit along its direction
     void moveForward();
     /// \desc rolls the sphere backward one unit along its direction
@@ -67,9 +68,12 @@ private:
     /// \desc generates a random value within the range [0.5f, 1.0f]
     /// \returns random value within the range [0.5f, 1.0f]
     static GLfloat _genRandColor();
-    void _drawBody(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation, glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
-    void _drawFins(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation, glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
-    void _drawEyes(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation, glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
+    void _drawBody(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+                   GLint typeBodyPart,glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
+    void _drawFins(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+                   GLint typeBodyPart,glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
+    void _drawEyes(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+                   glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
 };
 
 #endif // LAB11_MARBLE_H

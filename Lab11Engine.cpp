@@ -119,6 +119,7 @@ void Lab11Engine::mSetupShaders() {
 
     _textureShaderProgram = new CSCI441::ShaderProgram("shaders/textureShader.v.glsl", "shaders/textureShader.f.glsl" );
     _wavyShaderProgram = new CSCI441::ShaderProgram("shaders/wavy.v.glsl","shaders/wavy.f.glsl");
+    fprintf( stdout, "[INFO]: Wavy shader should have loaded.\n" );
     // get uniform locations
     _textureShaderProgramUniformLocations.mvpMatrix    = _textureShaderProgram->getUniformLocation("mvpMatrix");
     _textureShaderProgramUniformLocations.diffuseMap   = _textureShaderProgram->getUniformLocation("diffuseMap");
@@ -126,6 +127,8 @@ void Lab11Engine::mSetupShaders() {
     _wavyShaderProgramUniformLocations.mvpMatrix = _wavyShaderProgram->getUniformLocation("mvpMatrix");
     _wavyShaderProgramUniformLocations.time = _wavyShaderProgram->getUniformLocation("time");
     _wavyShaderProgramUniformLocations.color = _wavyShaderProgram->getUniformLocation("color");
+    _wavyShaderProgramUniformLocations.shouldMove = _wavyShaderProgram->getUniformLocation("shouldMove");
+    _wavyShaderProgramUniformLocations.typeBodyPart = _wavyShaderProgram->getUniformLocation("typeBodyPart");
     // get attribute locations
     _textureShaderProgramAttributeLocations.vPos       = _textureShaderProgram->getAttributeLocation("vPos");
     _textureShaderProgramAttributeLocations.vTexCoord  = _textureShaderProgram->getAttributeLocation("vTexCoord");
@@ -234,6 +237,7 @@ void Lab11Engine::mSetupScene() {
 void Lab11Engine::mCleanupShaders() {
     fprintf( stdout, "[INFO]: ...deleting Shaders.\n" );
     delete _textureShaderProgram;
+    delete _wavyShaderProgram;
 }
 
 void Lab11Engine::mCleanupBuffers() {
@@ -302,7 +306,10 @@ void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
                        _wavyShaderProgramUniformLocations.time,glfwGetTime());
     for(unsigned int i = 0; i < _numMarbles; i++) {
         _marbles[i]->draw( _wavyShaderProgram,
-                           _wavyShaderProgramUniformLocations.mvpMatrix, _wavyShaderProgramUniformLocations.color,
+                           _wavyShaderProgramUniformLocations.mvpMatrix,
+                           _wavyShaderProgramUniformLocations.color,
+                           _wavyShaderProgramUniformLocations.shouldMove,
+                           _wavyShaderProgramUniformLocations.typeBodyPart,
                            modelMatrix, projectionViewMatrix );
     }
 }
