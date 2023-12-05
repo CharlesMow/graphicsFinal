@@ -29,9 +29,11 @@ void Marble::setLocationZ(GLfloat z) { _location.z = z; }
 glm::vec3 Marble::getDirection() const { return _direction; }
 void Marble::setDirection(glm::vec3 newDirection) { _direction = glm::normalize(newDirection); }
 
-void Marble::draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation, glm::mat4 modelMtx, glm::mat4 projViewMtx ) {
+void Marble::draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint comUniformLocation, glm::mat4 modelMtx, glm::mat4 projViewMtx ) {
     glm::vec3 rotationAxis = glm::cross( _direction, CSCI441::Y_AXIS );
     modelMtx = glm::translate( modelMtx, _location );
+     glm::mat4 mvpMatrix = projViewMtx * modelMtx;
+    shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
     modelMtx = glm::translate( modelMtx, glm::vec3( 0, RADIUS, 0));
     _drawBody(shaderProgram, mvpUniformLocation, colorUniformLocation, modelMtx, projViewMtx);
     _drawFins(shaderProgram, mvpUniformLocation, colorUniformLocation, modelMtx, projViewMtx);
@@ -110,6 +112,11 @@ void Marble::moveForward() {
 
 void Marble::moveBackward() {
     _location -= _direction * SPEED;
+    /*
+    _rotation += SPEED;
+    if( _rotation > 6.28f ) {
+        _rotation -= 6.28f;
+    }*/
     //_rotation += SPEED;
     //if( _rotation > 6.28f ) {
     //    _rotation -= 6.28f;
