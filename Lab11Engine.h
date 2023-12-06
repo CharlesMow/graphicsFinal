@@ -152,6 +152,7 @@ private:
         GLint color;
         GLint shouldMove;
         GLint typeBodyPart;
+        GLint diffuseMap;
         GLint time;
     } _wavyShaderProgramUniformLocations;
     /// \desc stores the locations of all of our shader attributes
@@ -163,6 +164,7 @@ private:
     } _textureShaderProgramAttributeLocations;
     struct WavyShaderProgramAttributeLocations{
         GLint vPos;
+        GLint vTexCoord;
     } _wavyShaderProgramAttributeLocations;
     //***************************************************************************
     // Private Helper Functions
