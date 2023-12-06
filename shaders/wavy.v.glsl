@@ -42,29 +42,32 @@ float x_amp = 1.0;
 float z_amp = 0.3;
 float x_freq = 5.0;
 float z_freq = 0.3;
-float fin_freq = 2;
-float fin_amp = 0.1;
-float body_freq = 8;
-float body_amp = 0.25;
+float fin_freq = 7;
+float fin_amp = 0.2;
+float body_freq = 2;
+float body_amp = 0.10;
 // ***** VERTEX SHADER MAIN FUNCTION *****
 void main() {
   //sin(vPos.z*x_freq*time)*x_amp
+  isEye = vec2(typeBodyPart,6);
   if(shouldMove){
-    isEye = vec2(typeBodyPart,6);
     vec3 newPos = vec3(vPos.x, vPos.y, vPos.z);
     if(typeBodyPart == 0){
       // Do nothing
     }else if(typeBodyPart ==1 || typeBodyPart ==2){
-      newPos = vec3(vPos.x+sin(vPos.y*fin_freq*time)*fin_amp, vPos.y, vPos.z+sin(vPos.y*fin_freq*time)*fin_amp);
-    }else if(typeBodyPart ==3|| typeBodyPart == 5){
+      newPos = vec3(vPos.x, vPos.y, vPos.z+sin(vPos.y*fin_freq*time)*fin_amp);
+    }else if(typeBodyPart ==3){
       // Center Ring  +z = down   +y = right  +x = forward
-      newPos = vec3(vPos.x, vPos.y+cos(-vPos.z*body_freq*time)*body_amp,vPos.z);
-    }else if(typeBodyPart ==4 || typeBodyPart == 6){
+      newPos = vec3(vPos.x, vPos.y+cos(abs(vPos.x)*body_freq*time)*body_amp,vPos.z);
+    }else if(typeBodyPart == 5){
+      // Center Ring  +z = down   +y = right  +x = forward
+      newPos = vec3(vPos.x, vPos.y+cos(-abs(vPos.x)*body_freq*time)*body_amp,vPos.z);
+    }else if(typeBodyPart ==4){
       // LHS Disk     +z = right  +y = up     +x = forward
-      newPos = vec3(vPos.x, vPos.y,vPos.z+cos(vPos.y*body_freq*time)*body_amp);
+      newPos = vec3(vPos.x, vPos.y,vPos.z+cos(abs(vPos.x)*body_freq*time)*body_amp);
     }else if(typeBodyPart ==6){
       // RHS Disk
-      newPos = vec3(vPos.x, vPos.y,vPos.z+5);
+      newPos = vec3(vPos.x, vPos.y,vPos.z+cos(-abs(vPos.x)*body_freq*time)*body_amp);
     }
     gl_Position = mvpMatrix * vec4(newPos, 1.0);
   }else{
