@@ -42,10 +42,10 @@ float x_amp = 1.0;
 float z_amp = 0.3;
 float x_freq = 5.0;
 float z_freq = 0.3;
-float fin_freq = 0.5;
+float fin_freq = 2;
 float fin_amp = 0.1;
 float body_freq = 8;
-float body_amp = 0.1;
+float body_amp = 0.25;
 // ***** VERTEX SHADER MAIN FUNCTION *****
 void main() {
   //sin(vPos.z*x_freq*time)*x_amp

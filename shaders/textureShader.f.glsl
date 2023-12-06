@@ -37,7 +37,4 @@ void main() {
 
   // if viewing the backside of the fragment,
   // reverse the colors as a visual cue
-  if( !gl_FrontFacing ) {
-    fragColorOut.rgb = fragColorOut.bgr;
-  }
 }

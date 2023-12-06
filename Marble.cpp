@@ -31,12 +31,12 @@ void Marble::setDirection(glm::vec3 newDirection) { _direction = glm::normalize(
 
 void Marble::draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
                    GLint shouldMoveUniformLocation, GLint typeBodyPart, glm::mat4 modelMtx, glm::mat4 projViewMtx ) {
-    glm::vec3 rotationAxis = glm::cross( _direction, CSCI441::Y_AXIS );
     modelMtx = glm::translate( modelMtx, _location );
+    modelMtx = glm::rotate(modelMtx, glm::atan(_direction.x,_direction.z)-(float) M_PI_2, glm::vec3(0,1,0));
      glm::mat4 mvpMatrix = projViewMtx * modelMtx;
     shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
     shaderProgram->setProgramUniform( shouldMoveUniformLocation, true );
-    modelMtx = glm::translate( modelMtx, glm::vec3( 0, RADIUS, 0));
+    modelMtx = glm::translate( modelMtx, glm::vec3( 0, RADIUS*1.8, 0));
     _drawBody(shaderProgram, mvpUniformLocation, colorUniformLocation, typeBodyPart,modelMtx, projViewMtx);
     _drawFins(shaderProgram, mvpUniformLocation, colorUniformLocation, typeBodyPart,modelMtx, projViewMtx);
     shaderProgram->setProgramUniform( shouldMoveUniformLocation, false );
@@ -118,23 +118,10 @@ void Marble::_drawEyes(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLo
 }
 void Marble::moveForward() {
     //_location += _direction * SPEED;
-    //_rotation -= SPEED;
-    //if( _rotation < 0.0f ) {
-    //    _rotation += 6.28f;
-    //}
 }
 
 void Marble::moveBackward() {
     //_location -= _direction * SPEED;
-    /*
-    _rotation += SPEED;
-    if( _rotation > 6.28f ) {
-        _rotation -= 6.28f;
-    }*/
-    //_rotation += SPEED;
-    //if( _rotation > 6.28f ) {
-    //    _rotation -= 6.28f;
-    //}
 }
 
 GLfloat Marble::_genRandColor() {
