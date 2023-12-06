@@ -129,14 +129,16 @@ void Lab11Engine::mSetupShaders() {
     _wavyShaderProgramUniformLocations.color = _wavyShaderProgram->getUniformLocation("color");
     _wavyShaderProgramUniformLocations.shouldMove = _wavyShaderProgram->getUniformLocation("shouldMove");
     _wavyShaderProgramUniformLocations.typeBodyPart = _wavyShaderProgram->getUniformLocation("typeBodyPart");
+    _wavyShaderProgramUniformLocations.diffuseMap   = _wavyShaderProgram->getUniformLocation("diffuseMap");
     // get attribute locations
     _textureShaderProgramAttributeLocations.vPos       = _textureShaderProgram->getAttributeLocation("vPos");
     _textureShaderProgramAttributeLocations.vTexCoord  = _textureShaderProgram->getAttributeLocation("vTexCoord");
     _wavyShaderProgramAttributeLocations.vPos = _wavyShaderProgram->getAttributeLocation("vPos");
+    _wavyShaderProgramAttributeLocations.vTexCoord  = _wavyShaderProgram->getAttributeLocation("vTexCoord");
 
     // set static uniforms
     _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.diffuseMap, 0 );
-
+    _wavyShaderProgram->setProgramUniform( _wavyShaderProgramUniformLocations.diffuseMap, 0 );
     // hook up the CSCI441 object library to our shader program - MUST be done after the shader is used and before the objects are drawn
     // if we have multiple shaders the flow would be:
     //      1) shader->useProgram()
@@ -148,7 +150,8 @@ void Lab11Engine::mSetupShaders() {
     CSCI441::setVertexAttributeLocations(_textureShaderProgramAttributeLocations.vPos,
                                          -1,
                                          _textureShaderProgramAttributeLocations.vTexCoord);
-    CSCI441::setVertexAttributeLocations(_wavyShaderProgramAttributeLocations.vPos, -1, -1);
+    CSCI441::setVertexAttributeLocations(_wavyShaderProgramAttributeLocations.vPos, -1,
+                                         _wavyShaderProgramAttributeLocations.vTexCoord);
 }
 
 void Lab11Engine::mSetupBuffers() {
@@ -297,9 +300,8 @@ void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
 
     //***************************************************************************
     // Draw Marbles
-
-    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::MARBLE_TEX] );
     _wavyShaderProgram->useProgram();
+    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::MARBLE_TEX] );
     glProgramUniform3f(_wavyShaderProgram->getShaderProgramHandle(),
                        _wavyShaderProgramUniformLocations.color, 0.0,0.0,1.0);
     glProgramUniform1f(_wavyShaderProgram->getShaderProgramHandle(),

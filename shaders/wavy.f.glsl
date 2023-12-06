@@ -20,10 +20,13 @@
 // ***** FRAGMENT SHADER OUTPUT *****
 out vec4 fragColorOut;
 uniform vec3 color;
+uniform sampler2D diffuseMap;
+layout(location = 0) in vec2 texCoord;
 // ***** FRAGMENT SHADER HELPER FUNCTIONS *****
 
 
 // ***** FRAGMENT SHADER MAIN FUNCTION *****
 void main() {
-  fragColorOut = vec4(color,1.0);
+  fragColorOut = texture(diffuseMap, texCoord) * vec4(color, 1.0);
+
 }
