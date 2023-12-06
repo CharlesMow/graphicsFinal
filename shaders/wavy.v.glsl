@@ -24,6 +24,7 @@ uniform bool shouldMove;
 uniform int typeBodyPart;
 layout(location = 2) in vec2 vTexCoord;
 layout(location = 0) out vec2 texCoord;
+layout(location = 3) out vec2 isEye;
 /*  Body Part Mapping
 0 == eyes
 1 == fin1
@@ -49,6 +50,7 @@ float body_amp = 0.1;
 void main() {
   //sin(vPos.z*x_freq*time)*x_amp
   if(shouldMove){
+    isEye = vec2(typeBodyPart,6);
     vec3 newPos = vec3(vPos.x, vPos.y, vPos.z);
     if(typeBodyPart == 0){
       // Do nothing

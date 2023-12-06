@@ -219,8 +219,8 @@ void Lab11Engine::mSetupBuffers() {
 void Lab11Engine::mSetupTextures() {
     // unused in this lab
 
-    _textureHandles[TEXTURES::PLATFORM_TEX] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/metal.jpg");
-    _textureHandles[TEXTURES::MARBLE_TEX]   = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/brick.ppm");
+    _textureHandles[TEXTURES::PLATFORM_TEX] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/water.jpeg");
+    _textureHandles[TEXTURES::MARBLE_TEX]   = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/sunfishSkin.png");
 }
 
 void Lab11Engine::mSetupScene() {

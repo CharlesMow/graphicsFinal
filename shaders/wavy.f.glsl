@@ -22,11 +22,16 @@ out vec4 fragColorOut;
 uniform vec3 color;
 uniform sampler2D diffuseMap;
 layout(location = 0) in vec2 texCoord;
+layout(location = 3) in vec2 isEye;
 // ***** FRAGMENT SHADER HELPER FUNCTIONS *****
 
 
 // ***** FRAGMENT SHADER MAIN FUNCTION *****
 void main() {
-  fragColorOut = texture(diffuseMap, texCoord) * vec4(color, 1.0);
+  if(isEye.x==0){
+    fragColorOut = vec4(color,1.0);
+  }else{
+    fragColorOut = texture(diffuseMap, texCoord); //* vec4(color, 1.0);
+  }
 
 }
