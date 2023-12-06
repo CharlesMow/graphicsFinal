@@ -42,7 +42,7 @@ float z_freq = 0.3;
 float fin_freq = 0.5;
 float fin_amp = 0.1;
 float body_freq = 8;
-float body_amp = 0.05;
+float body_amp = 0.1;
 // ***** VERTEX SHADER MAIN FUNCTION *****
 void main() {
   //sin(vPos.z*x_freq*time)*x_amp
@@ -54,7 +54,7 @@ void main() {
       newPos = vec3(vPos.x+sin(vPos.y*fin_freq*time)*fin_amp, vPos.y, vPos.z+sin(vPos.y*fin_freq*time)*fin_amp);
     }else if(typeBodyPart ==3|| typeBodyPart == 5){
       // Center Ring  +z = down   +y = right  +x = forward
-      newPos = vec3(vPos.x, vPos.y,vPos.z);
+      newPos = vec3(vPos.x, vPos.y+cos(-vPos.z*body_freq*time)*body_amp,vPos.z);
     }else if(typeBodyPart ==4 || typeBodyPart == 6){
       // LHS Disk     +z = right  +y = up     +x = forward
       newPos = vec3(vPos.x, vPos.y,vPos.z+cos(vPos.y*body_freq*time)*body_amp);
