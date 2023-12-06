@@ -135,7 +135,7 @@ void Lab11Engine::mSetupShaders() {
     _textureShaderProgramAttributeLocations.vTexCoord  = _textureShaderProgram->getAttributeLocation("vTexCoord");
     _wavyShaderProgramAttributeLocations.vPos = _wavyShaderProgram->getAttributeLocation("vPos");
     _wavyShaderProgramAttributeLocations.vTexCoord  = _wavyShaderProgram->getAttributeLocation("vTexCoord");
-
+    _wavyShaderProgramAttributeLocations.normal = _wavyShaderProgram->getAttributeLocation("normal");
     // set static uniforms
     _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.diffuseMap, 0 );
     _wavyShaderProgram->setProgramUniform( _wavyShaderProgramUniformLocations.diffuseMap, 0 );
@@ -150,7 +150,8 @@ void Lab11Engine::mSetupShaders() {
     CSCI441::setVertexAttributeLocations(_textureShaderProgramAttributeLocations.vPos,
                                          -1,
                                          _textureShaderProgramAttributeLocations.vTexCoord);
-    CSCI441::setVertexAttributeLocations(_wavyShaderProgramAttributeLocations.vPos, -1,
+    CSCI441::setVertexAttributeLocations(_wavyShaderProgramAttributeLocations.vPos,
+                                         _wavyShaderProgramAttributeLocations.normal,
                                          _wavyShaderProgramAttributeLocations.vTexCoord);
 }
 

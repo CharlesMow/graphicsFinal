@@ -165,6 +165,7 @@ private:
     struct WavyShaderProgramAttributeLocations{
         GLint vPos;
         GLint vTexCoord;
+        GLint normal;
     } _wavyShaderProgramAttributeLocations;
     //***************************************************************************
     // Private Helper Functions

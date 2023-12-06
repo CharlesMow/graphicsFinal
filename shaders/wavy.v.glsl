@@ -22,9 +22,12 @@ uniform mat4 mvpMatrix;
 uniform float time;
 uniform bool shouldMove;
 uniform int typeBodyPart;
+
+layout(location = 5) in vec3 normal;
 layout(location = 2) in vec2 vTexCoord;
 layout(location = 0) out vec2 texCoord;
 layout(location = 3) out vec2 isEye;
+layout(location = 4) out vec3 normalOut;
 /*  Body Part Mapping
 0 == eyes
 1 == fin1
@@ -74,4 +77,7 @@ void main() {
     gl_Position = mvpMatrix * vec4(vPos, 1.0);
   }
   texCoord = vTexCoord;
+
+  //lighting computations
+  normalOut = normal;
 }
