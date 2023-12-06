@@ -19,6 +19,7 @@
 
 // ***** VERTEX SHADER UNIFORMS *****
 uniform mat4 mvpMatrix;
+uniform mat4 modelMatrix;
 uniform float time;
 uniform bool shouldMove;
 uniform int typeBodyPart;
@@ -79,5 +80,5 @@ void main() {
   texCoord = vTexCoord;
 
   //lighting computations
-  normalOut = normal;
+  normalOut = vec3(modelMatrix * vec4(normal, 1.0));
 }

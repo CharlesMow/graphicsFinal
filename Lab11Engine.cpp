@@ -130,6 +130,7 @@ void Lab11Engine::mSetupShaders() {
     _wavyShaderProgramUniformLocations.shouldMove = _wavyShaderProgram->getUniformLocation("shouldMove");
     _wavyShaderProgramUniformLocations.typeBodyPart = _wavyShaderProgram->getUniformLocation("typeBodyPart");
     _wavyShaderProgramUniformLocations.diffuseMap   = _wavyShaderProgram->getUniformLocation("diffuseMap");
+    _wavyShaderProgramUniformLocations.modelMatrix = _wavyShaderProgram->getUniformLocation("modelMatrix");
     // get attribute locations
     _textureShaderProgramAttributeLocations.vPos       = _textureShaderProgram->getAttributeLocation("vPos");
     _textureShaderProgramAttributeLocations.vTexCoord  = _textureShaderProgram->getAttributeLocation("vTexCoord");
@@ -312,6 +313,7 @@ void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
                            _wavyShaderProgramUniformLocations.mvpMatrix,
                            _wavyShaderProgramUniformLocations.color,
                            _wavyShaderProgramUniformLocations.shouldMove,
+                           _wavyShaderProgramUniformLocations.modelMatrix,
                            _wavyShaderProgramUniformLocations.typeBodyPart,
                            modelMatrix, projectionViewMatrix );
     }

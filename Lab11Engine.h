@@ -149,6 +149,7 @@ private:
     } _textureShaderProgramUniformLocations;
     struct WavyShaderProgramUniformLocation{
         GLint mvpMatrix;
+        GLint modelMatrix;
         GLint color;
         GLint shouldMove;
         GLint typeBodyPart;

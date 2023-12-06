@@ -51,7 +51,9 @@ public:
     /// \param modelMtx model matrix containing any transformations already applied
     /// \param projViewMtx precomputed ViewProjection matrix
     void draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
-               GLint shouldMoveUniformLocation,GLint typeBodyPart, glm::mat4 modelMtx, glm::mat4 projViewMtx );
+               GLint shouldMoveUniformLocation,
+               GLint modelMatrixUniformLocation,
+               GLint typeBodyPart, glm::mat4 modelMtx, glm::mat4 projViewMtx );
     /// \desc rolls the sphere forward one unit along its direction
     void moveForward();
     /// \desc rolls the sphere backward one unit along its direction
@@ -69,10 +71,15 @@ private:
     /// \returns random value within the range [0.5f, 1.0f]
     static GLfloat _genRandColor();
     void _drawBody(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
-                   GLint typeBodyPart,glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
+                   GLint typeBodyPart,
+                   GLint modelMatrixUniformLocation,
+                   glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
     void _drawFins(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
-                   GLint typeBodyPart,glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
+                   GLint typeBodyPart,
+                   GLint modelMatrixUniformLocation,
+                   glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
     void _drawEyes(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+                   GLint modelMatrixUniformLocation,
                    glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
 };
 

@@ -29,20 +29,20 @@ layout(location = 4) in vec3 normal;
 
 // ***** FRAGMENT SHADER MAIN FUNCTION *****
 void main() {
-  vec3 lightDir = vec3(-1,1,-1);
+  vec3 lightDir = vec3(0,0.5,0);
   float intensity;
-  vec4 colorCel;
-
+  vec3 colorCel;
+  vec4 tempColor;
   if(isEye.x==0){
     fragColorOut = vec4(color,1.0);
   }else{
-    fragColorOut = texture(diffuseMap, texCoord); //* vec4(color, 1.0);
+    tempColor = texture(diffuseMap, texCoord); //* vec4(color, 1.0);
     intensity = dot(lightDir, normal);
-    if (intensity > 0.95) colorCel = vec4(1.0, 0.5, 0.5, 1.0);
-    else if (intensity > 0.5) colorCel = vec4(0.6,0.3,0.3,1.0);
-    else if (intensity > 0.25) colorCel = vec4(0.4,0.2,0.2,1.0);
-    else colorCel = vec4(0.2,0.1,0.1,1.0);
-    fragColorOut = colorCel;
+    if (intensity > 0.95) colorCel = vec3(215.0/255.0, 220.0/255.0, 1.0);
+    else if (intensity > 0.75) colorCel = vec3(215.0/255.0, 220.0/255.0, 1.0) * 0.75;
+    else if (intensity > 0.5) colorCel = vec3(215.0/255.0, 220.0/255.0, 1.0) * 0.5;
+    else colorCel = vec3(215.0/255.0, 220.0/255.0, 1.0) * 0.2;
+    fragColorOut = tempColor * vec4(colorCel, 1.0);
   }
 
 }
