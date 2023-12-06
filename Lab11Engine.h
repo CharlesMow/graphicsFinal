@@ -117,6 +117,17 @@ private:
     /// \desc the size of our ground plane
     GLfloat _groundSize;
 
+  //Boid control point
+    GLfloat bcp_X = 0;
+    GLfloat bcp_Z = 0; 
+
+    void moveForward();
+    void moveBackward();
+    void moveLeft();
+    void moveRight();
+    void moveToBcp();
+
+
     //***************************************************************************
     // Texture Information
 

@@ -40,6 +40,18 @@ void Lab11Engine::handleKeyEvent(GLint key, GLint action) {
             case GLFW_KEY_ESCAPE:
                 setWindowShouldClose();
                 break;
+            case GLFW_KEY_W:
+                moveForward();
+                break;
+            case GLFW_KEY_S:
+                moveBackward();
+                break;
+            case GLFW_KEY_A:
+                moveLeft();
+                break;
+            case GLFW_KEY_D:
+                moveRight();
+                break;
 
             default: break; // suppress CLion warning
         }
@@ -300,6 +312,21 @@ void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     glBindVertexArray( _vaos[VAO_ID::PLATFORM] );
     glDrawElements( GL_TRIANGLE_STRIP, _numVAOPoints[VAO_ID::PLATFORM], GL_UNSIGNED_SHORT, (void*)0 );
 
+
+// Draw ball and move to current position for boid direction
+    modelMatrix = glm::mat4( 1.0f );
+
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(bcp_X, 0.0, bcp_Z));
+    mvpMatrix = projectionViewMatrix * modelMatrix;
+    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.mvpMatrix, mvpMatrix );
+
+    glm::vec3 yellow(1,1,0);
+    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.colorTint, yellow );
+    CSCI441::drawSolidSphere(1,16,16);
+
+    modelMatrix = glm::mat4( 1.0f );
+    mvpMatrix = projectionViewMatrix * modelMatrix;
+
     //***************************************************************************
     // Draw Marbles
     _wavyShaderProgram->useProgram();
@@ -320,9 +347,13 @@ void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
 }
 
 void Lab11Engine::_updateScene() {
+
     _moveMarbles();
+    moveToBcp();
+
     _collideMarblesWithWall();
-    _collideMarblesWithMarbles();
+    // _collideMarblesWithMarbles();
+
 }
 
 void Lab11Engine::run() {
@@ -364,6 +395,50 @@ void Lab11Engine::run() {
 //*************************************************************************************
 //
 // Private Helper Functions
+
+
+void Lab11Engine::moveForward(){
+    bcp_X += 2.0;
+}
+void Lab11Engine::moveBackward(){
+    bcp_X -= 2.0;
+}
+void Lab11Engine::moveLeft(){
+    bcp_Z -= 2.0;
+}
+void Lab11Engine::moveRight(){
+    bcp_Z += 2.0;
+}
+
+
+void Lab11Engine::moveToBcp(){
+
+    for( unsigned int i = 0; i < _numMarbles; i++){
+        glm::vec3 collision = glm::vec3(0.0f);
+
+        for( unsigned int j = 0; j < _numMarbles; j++){
+            if(i == j){continue;}
+            
+            GLfloat distance = sqrt( pow((_marbles[j]->getLocation().x - _marbles[i]->getLocation().x),2) + pow((_marbles[j]->getLocation().y - _marbles[i]->getLocation().y),2) + pow((_marbles[j]->getLocation().z - _marbles[i]->getLocation().z),2)  );
+            if(distance < 1.0f){
+                collision = collision - (_marbles[j]->getLocation() - _marbles[i]->getLocation());
+                // _marbles[i]->setLocationX(_marbles[i]->getLocation().x + 1.0);
+                // _marbles[i]->setLocationX(_marbles[i]->getLocation().z + 1.0);
+
+            }
+        }
+
+
+
+        collision = glm::vec3(collision.x, 0.0f, collision.z);
+
+        glm::vec3 temp = _marbles[i]->getLocation();
+        glm::vec3 newDirection = temp - glm::vec3(bcp_X, 0.0, bcp_Z);
+
+        newDirection = (_marbles[i]->getDirection() - (newDirection * 0.01f));
+        _marbles[i]->setDirection(newDirection + collision);
+    }
+}
 
 void Lab11Engine::_moveMarbles() {
     //  TODO #1: move every ball forward along its heading
