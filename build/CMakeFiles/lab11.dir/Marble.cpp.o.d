@@ -1,7 +1,7 @@
 CMakeFiles/lab11.dir/Marble.cpp.o: \
- /home/charlesmowbray/Documents/CSCI441/lab11/Marble.cpp \
+ /home/charlesmowbray/Documents/GitHub/graphicsFinal/Marble.cpp \
  /usr/include/stdc-predef.h \
- /home/charlesmowbray/Documents/CSCI441/lab11/Marble.h \
+ /home/charlesmowbray/Documents/GitHub/graphicsFinal/Marble.h \
  /usr/local/include/glm/glm.hpp /usr/local/include/glm/detail/_fixes.hpp \
  /usr/include/c++/13/cmath /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \

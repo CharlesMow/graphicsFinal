@@ -1,7 +1,7 @@
 CMakeFiles/lab11.dir/main.cpp.o: \
- /home/charlesmowbray/Documents/CSCI441/lab11/main.cpp \
+ /home/charlesmowbray/Documents/GitHub/graphicsFinal/main.cpp \
  /usr/include/stdc-predef.h \
- /home/charlesmowbray/Documents/CSCI441/lab11/Lab11Engine.h \
+ /home/charlesmowbray/Documents/GitHub/graphicsFinal/Lab11Engine.h \
  /usr/local/include/CSCI441/ArcballCam.hpp \
  /usr/local/include/CSCI441/Camera.hpp /usr/local/include/GL/glew.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
@@ -350,4 +350,4 @@ CMakeFiles/lab11.dir/main.cpp.o: \
  /usr/include/c++/13/bits/stl_vector.h \
  /usr/include/c++/13/bits/stl_bvector.h \
  /usr/include/c++/13/bits/vector.tcc \
- /home/charlesmowbray/Documents/CSCI441/lab11/Marble.h
+ /home/charlesmowbray/Documents/GitHub/graphicsFinal/Marble.h

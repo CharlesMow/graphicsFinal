@@ -1,7 +1,7 @@
 CMakeFiles/lab11.dir/Lab11Engine.cpp.o: \
- /home/charlesmowbray/Documents/CSCI441/lab11/Lab11Engine.cpp \
+ /home/charlesmowbray/Documents/GitHub/graphicsFinal/Lab11Engine.cpp \
  /usr/include/stdc-predef.h \
- /home/charlesmowbray/Documents/CSCI441/lab11/Lab11Engine.h \
+ /home/charlesmowbray/Documents/GitHub/graphicsFinal/Lab11Engine.h \
  /usr/local/include/CSCI441/ArcballCam.hpp \
  /usr/local/include/CSCI441/Camera.hpp /usr/local/include/GL/glew.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
@@ -350,8 +350,8 @@ CMakeFiles/lab11.dir/Lab11Engine.cpp.o: \
  /usr/include/c++/13/bits/stl_vector.h \
  /usr/include/c++/13/bits/stl_bvector.h \
  /usr/include/c++/13/bits/vector.tcc \
- /home/charlesmowbray/Documents/CSCI441/lab11/Marble.h \
+ /home/charlesmowbray/Documents/GitHub/graphicsFinal/Marble.h \
  /usr/local/include/CSCI441/objects.hpp \
  /usr/local/include/CSCI441/teapot.hpp \
  /usr/local/include/CSCI441/TextureUtils.hpp /usr/include/stb_image.h \
- /usr/include/c++/13/stdlib.h
+ /usr/include/c++/13/stdlib.h /usr/include/c++/13/ctime

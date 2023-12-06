@@ -130,11 +130,11 @@ void Marble::_drawEyes(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLo
     CSCI441::drawSolidSphere( 0.2, 16, 16 );
 }
 void Marble::moveForward() {
-    //_location += _direction * SPEED;
+    _location += _direction * SPEED;
 }
 
 void Marble::moveBackward() {
-    //_location -= _direction * SPEED;
+    _location -= _direction * SPEED;
 }
 
 GLfloat Marble::_genRandColor() {
