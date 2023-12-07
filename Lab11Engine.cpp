@@ -177,10 +177,10 @@ void Lab11Engine::mSetupBuffers() {
 
     //***************************************************************************
     // Ground Plane generation
-    _groundSize = 10.0f;
+    _groundSize = 100.0f;
     _marbleRadius = 1.0f;
 
-    GLfloat platformSize = _groundSize + _marbleRadius;
+    GLfloat platformSize = _groundSize;
 
     VertexTextured platformVertices[4] = {
             { -platformSize, 0.0f, -platformSize,   0.0f,  0.0f }, // 0 - BL
@@ -235,6 +235,22 @@ void Lab11Engine::mSetupTextures() {
 
     _textureHandles[TEXTURES::PLATFORM_TEX] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/water.PNG");
     _textureHandles[TEXTURES::MARBLE_TEX]   = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/sunfishSkin.png");
+
+    // Skybox texture handles
+    _textureHandles[TEXTURES::POS_X] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/posx.jpg",
+                                                                                     GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
+    _textureHandles[TEXTURES::NEG_X] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/negx.jpg",
+                                                                                     GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
+
+    _textureHandles[TEXTURES::POS_Y] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/posy.jpg",
+                                                                                     GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
+    _textureHandles[TEXTURES::NEG_Y] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/negy.jpg",
+                                                                                     GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
+
+    _textureHandles[TEXTURES::POS_Z] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/posz.jpg",
+                                                                                     GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
+    _textureHandles[TEXTURES::NEG_Z] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/negz.jpg",
+                                                                                     GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
 }
 
 void Lab11Engine::mSetupScene() {
@@ -288,7 +304,82 @@ void Lab11Engine::mCleanupScene() {
 //*************************************************************************************
 //
 // Rendering / Drawing Functions - this is where the magic happens!
+void Lab11Engine::drawSkybox(glm::mat4 projMtx) const{
+    glm::vec3 white(1,1,1);
+    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.colorTint, white );
 
+    // GOOD TO GO
+    // Floor -Z
+    glm::mat4 modelMatrix = glm::mat4( 1.0f );
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0,-_groundSize,0));
+    glm::mat4 mvpMatrix = projMtx * modelMatrix;
+    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.mvpMatrix, mvpMatrix );
+
+    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::NEG_Y] );
+    glBindVertexArray( _vaos[VAO_ID::PLATFORM] );
+    glDrawElements( GL_TRIANGLE_STRIP, _numVAOPoints[VAO_ID::PLATFORM], GL_UNSIGNED_SHORT, (void*)0 );
+
+
+    // TOP +Y
+    modelMatrix = glm::mat4( 1.0f );
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0,_groundSize,0));
+    modelMatrix = glm::rotate(modelMatrix,(float) M_PI,CSCI441::X_AXIS);
+    mvpMatrix = projMtx * modelMatrix;
+    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.mvpMatrix, mvpMatrix );
+
+    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::POS_Y] );
+    glBindVertexArray( _vaos[VAO_ID::PLATFORM] );
+    glDrawElements( GL_TRIANGLE_STRIP, _numVAOPoints[VAO_ID::PLATFORM], GL_UNSIGNED_SHORT, (void*)0 );
+
+
+    // GOOD TO GO
+    modelMatrix = glm::mat4( 1.0f );
+    modelMatrix = glm::rotate(modelMatrix,(float) M_PI_2,CSCI441::X_AXIS);
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0,_groundSize,0));
+    modelMatrix = glm::rotate(modelMatrix,(float) M_PI,CSCI441::Z_AXIS);
+    mvpMatrix = projMtx * modelMatrix;
+    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.mvpMatrix, mvpMatrix );
+
+    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::NEG_Z] );
+    glBindVertexArray( _vaos[VAO_ID::PLATFORM] );
+    glDrawElements( GL_TRIANGLE_STRIP, _numVAOPoints[VAO_ID::PLATFORM], GL_UNSIGNED_SHORT, (void*)0 );
+
+    // GOOD TO GO
+    modelMatrix = glm::mat4( 1.0f );
+    modelMatrix = glm::rotate(modelMatrix,(float) M_PI_2,CSCI441::X_AXIS);
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0,-_groundSize,0));
+    mvpMatrix = projMtx * modelMatrix;
+    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.mvpMatrix, mvpMatrix );
+
+    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::POS_Z] );
+    glBindVertexArray( _vaos[VAO_ID::PLATFORM] );
+    glDrawElements( GL_TRIANGLE_STRIP, _numVAOPoints[VAO_ID::PLATFORM], GL_UNSIGNED_SHORT, (void*)0 );
+
+    // GOOD TO GO
+    modelMatrix = glm::mat4( 1.0f );
+    modelMatrix = glm::rotate(modelMatrix,(float) M_PI_2,CSCI441::Z_AXIS);
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0,_groundSize,0));
+    modelMatrix = glm::rotate(modelMatrix,-(float) M_PI_2,CSCI441::Y_AXIS);
+    modelMatrix = glm::rotate(modelMatrix,(float) M_PI,CSCI441::Z_AXIS);
+    mvpMatrix = projMtx * modelMatrix;
+    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.mvpMatrix, mvpMatrix );
+
+    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::NEG_X] );
+    glBindVertexArray( _vaos[VAO_ID::PLATFORM] );
+    glDrawElements( GL_TRIANGLE_STRIP, _numVAOPoints[VAO_ID::PLATFORM], GL_UNSIGNED_SHORT, (void*)0 );
+
+    // GOOD TO GO
+    modelMatrix = glm::mat4( 1.0f );
+    modelMatrix = glm::rotate(modelMatrix,(float) M_PI_2,CSCI441::Z_AXIS);
+    modelMatrix = glm::translate(modelMatrix, glm::vec3(0,-_groundSize,0));
+    modelMatrix = glm::rotate(modelMatrix,-(float) M_PI_2,CSCI441::Y_AXIS);
+    mvpMatrix = projMtx * modelMatrix;
+    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.mvpMatrix, mvpMatrix );
+
+    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::POS_X] );
+    glBindVertexArray( _vaos[VAO_ID::PLATFORM] );
+    glDrawElements( GL_TRIANGLE_STRIP, _numVAOPoints[VAO_ID::PLATFORM], GL_UNSIGNED_SHORT, (void*)0 );
+}
 void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     // if either shader program is null, do not continue any further to prevent run time errors
     if(!_textureShaderProgram) {
@@ -299,18 +390,10 @@ void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     // Draw Ground Plane
 
     _textureShaderProgram->useProgram();
-
     glm::mat4 modelMatrix = glm::mat4( 1.0f );
     glm::mat4 projectionViewMatrix = projMtx * viewMtx;
     glm::mat4 mvpMatrix = projectionViewMatrix * modelMatrix;
-    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.mvpMatrix, mvpMatrix );
-
-    glm::vec3 white(1,1,1);
-    _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.colorTint, white );
-
-    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::PLATFORM_TEX] );
-    glBindVertexArray( _vaos[VAO_ID::PLATFORM] );
-    glDrawElements( GL_TRIANGLE_STRIP, _numVAOPoints[VAO_ID::PLATFORM], GL_UNSIGNED_SHORT, (void*)0 );
+    drawSkybox(projectionViewMatrix);
 
 
 // Draw ball and move to current position for boid direction

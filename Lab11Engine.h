@@ -132,13 +132,20 @@ private:
     // Texture Information
 
     /// \desc total number of textures in our scene
-    static constexpr GLuint NUM_TEXTURES = NUM_VAOS + 1;
+    static constexpr GLuint NUM_TEXTURES = 8;
     /// \desc used to index through our texture handle array to give named access
     enum TEXTURES {
         /// \desc the ground plane
         PLATFORM_TEX = 0,
         /// \desc our marble spheres
         MARBLE_TEX = 1,
+        POS_X = 2,
+        NEG_X = 3,
+        POS_Y = 4,
+        NEG_Y = 5,
+        POS_Z = 6,
+        NEG_Z = 7
+
     };
     /// \desc texture handles for our objects
     GLuint _textureHandles[NUM_TEXTURES];
@@ -194,6 +201,7 @@ private:
     void _collideMarblesWithWall();
     /// \desc checks if any two marbles have collided with each other
     void _collideMarblesWithMarbles();
+    void drawSkybox(glm::mat4 projMtx) const;
 };
 
 void lab11_keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods );
