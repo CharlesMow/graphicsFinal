@@ -40,19 +40,6 @@ void FPEngine::handleKeyEvent(GLint key, GLint action) {
             case GLFW_KEY_ESCAPE:
                 setWindowShouldClose();
                 break;
-            case GLFW_KEY_W:
-                moveForward();
-                break;
-            case GLFW_KEY_S:
-                moveBackward();
-                break;
-            case GLFW_KEY_A:
-                moveLeft();
-                break;
-            case GLFW_KEY_D:
-                moveRight();
-                break;
-
             default: break; // suppress CLion warning
         }
     }
@@ -236,8 +223,8 @@ void FPEngine::mSetupTextures() {
     // unused in this lab
 
     _textureHandles[TEXTURES::PLATFORM_TEX] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/water.PNG");
-    _textureHandles[TEXTURES::MARBLE_TEX]   = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/sunfishSkin.png");
-
+    _textureHandles[TEXTURES::FISH_TEX]   = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/sunfishSkin.png");
+    _textureHandles[TEXTURES::BCP_TEX]      = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/bcp.png");
     // Skybox texture handles
     /*  POS_X   = +x    ft
      *  NEG_X   = -x    bk
@@ -413,7 +400,7 @@ void FPEngine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     modelMatrix = glm::translate(modelMatrix, glm::vec3(bcp_X, 0.0, bcp_Z));
     mvpMatrix = projectionViewMatrix * modelMatrix;
     _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.mvpMatrix, mvpMatrix );
-    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::MARBLE_TEX] );
+    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::BCP_TEX] );
     glm::vec3 yellow(1,1,0);
     _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.colorTint, yellow );
 
@@ -427,7 +414,7 @@ void FPEngine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     _wavyShaderProgram->useProgram();
     _wavyShaderProgram->setProgramUniform(_wavyShaderProgramUniformLocations.viewPos, _arcballCam->getPosition());
     _wavyShaderProgram->setProgramUniform(_wavyShaderProgramUniformLocations.pLightPos, glm::vec3(bcp_X, 0.0, bcp_Z));
-    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::MARBLE_TEX] );
+    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::FISH_TEX] );
     glProgramUniform3f(_wavyShaderProgram->getShaderProgramHandle(),
                        _wavyShaderProgramUniformLocations.color, 0.0,0.0,1.0);
     glProgramUniform1f(_wavyShaderProgram->getShaderProgramHandle(),
@@ -447,7 +434,21 @@ void FPEngine::_updateScene() {
 
     _moveMarbles();
     moveToBcp();
-
+    float side = 0;
+    float front = 0;
+    if(_keys[GLFW_KEY_D]){
+        side += 0.1;
+    }
+    if(_keys[GLFW_KEY_A]){
+        side -= 0.1;
+    }
+    if(_keys[GLFW_KEY_W]){
+        front += 0.1;
+    }
+    if(_keys[GLFW_KEY_S]){
+        front -= 0.1;
+    }
+    moveBCP(side, front);
     _collideMarblesWithWall();
     // _collideMarblesWithMarbles();
 
@@ -494,19 +495,10 @@ void FPEngine::run() {
 // Private Helper Functions
 
 
-void FPEngine::moveForward(){
-    bcp_X += 2.0;
+void FPEngine::moveBCP(float side, float front){
+    bcp_X += front;
+    bcp_Z += side;
 }
-void FPEngine::moveBackward(){
-    bcp_X -= 2.0;
-}
-void FPEngine::moveLeft(){
-    bcp_Z -= 2.0;
-}
-void FPEngine::moveRight(){
-    bcp_Z += 2.0;
-}
-
 
 void FPEngine::moveToBcp(){
 

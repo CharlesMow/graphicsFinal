@@ -34,8 +34,10 @@ void Marble::draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocati
                    GLint modelMatrixUniformLocation,
                    GLint typeBodyPart, glm::mat4 modelMtx, glm::mat4 projViewMtx ) {
     modelMtx = glm::translate( modelMtx, _location );
+    glm::vec3 rotationAxis = glm::cross( _direction, CSCI441::Y_AXIS );
+    //modelMtx = glm::rotate(modelMtx, glm::atan(_direction.y, _direction.x), rotationAxis);
     modelMtx = glm::rotate(modelMtx, glm::atan(_direction.x,_direction.z)-(float) M_PI_2, glm::vec3(0,1,0));
-     glm::mat4 mvpMatrix = projViewMtx * modelMtx;
+    glm::mat4 mvpMatrix = projViewMtx * modelMtx;
     shaderProgram->setProgramUniform( mvpUniformLocation, mvpMatrix );
     shaderProgram->setProgramUniform( shouldMoveUniformLocation, true );
     modelMtx = glm::translate( modelMtx, glm::vec3( 0, RADIUS*1.8, 0));
