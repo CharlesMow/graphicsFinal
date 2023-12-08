@@ -128,19 +128,20 @@ private:
     // Texture Information
 
     /// \desc total number of textures in our scene
-    static constexpr GLuint NUM_TEXTURES = 8;
+    static constexpr GLuint NUM_TEXTURES = 9;
     /// \desc used to index through our texture handle array to give named access
     enum TEXTURES {
         /// \desc the ground plane
         PLATFORM_TEX = 0,
         /// \desc our marble spheres
-        MARBLE_TEX = 1,
+        FISH_TEX = 1,
         POS_X = 2,
         NEG_X = 3,
         POS_Y = 4,
         NEG_Y = 5,
         POS_Z = 6,
-        NEG_Z = 7
+        NEG_Z = 7,
+        BCP_TEX = 8
 
     };
     /// \desc texture handles for our objects
