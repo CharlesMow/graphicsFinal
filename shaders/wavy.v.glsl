@@ -29,6 +29,7 @@ layout(location = 2) in vec2 vTexCoord;
 layout(location = 0) out vec2 texCoord;
 layout(location = 3) out vec2 isEye;
 layout(location = 4) out vec3 normalOut;
+layout(location = 5) out vec3 FragPos;
 /*  Body Part Mapping
 0 == eyes
 1 == fin1
@@ -80,5 +81,6 @@ void main() {
   texCoord = vTexCoord;
 
   //lighting computations
-  normalOut = vec3(modelMatrix * vec4(normal, 1.0));
+  normalOut = mat3(transpose(inverse(modelMatrix))) * normal;
+  FragPos = vec3(modelMatrix * vec4(vPos,1.0));
 }
