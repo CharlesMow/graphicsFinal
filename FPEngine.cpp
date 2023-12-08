@@ -36,7 +36,6 @@ void FPEngine::handleKeyEvent(GLint key, GLint action) {
     if(action == GLFW_PRESS) {
         switch( key ) {
             // quit!
-            case GLFW_KEY_Q:
             case GLFW_KEY_ESCAPE:
                 setWindowShouldClose();
                 break;
@@ -434,6 +433,7 @@ void FPEngine::_updateScene() {
 
     _moveMarbles();
     moveToBcp();
+    //camera and bcp movement
     float side = 0;
     float front = 0;
     if(_keys[GLFW_KEY_D]){
@@ -452,7 +452,15 @@ void FPEngine::_updateScene() {
         side -= cos(_arcballCam->getTheta())*0.1;
         front += sin(_arcballCam->getTheta())*0.1;
     }
+    if(_keys[GLFW_KEY_Q]){
+        _arcballCam->rotate(0.02, 0);
+    }
+    if(_keys[GLFW_KEY_E]){
+        _arcballCam->rotate(-0.02, 0);
+    }
     moveBCP(side, front);
+    _arcballCam->setLookAtPoint(glm::vec3(bcp_X, 0, bcp_Z));
+    _arcballCam->recomputeOrientation();
     _collideMarblesWithWall();
     // _collideMarblesWithMarbles();
 
