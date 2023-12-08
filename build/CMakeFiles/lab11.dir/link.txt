@@ -1,1 +1,1 @@
-/usr/bin/c++ CMakeFiles/lab11.dir/main.cpp.o CMakeFiles/lab11.dir/Lab11Engine.cpp.o CMakeFiles/lab11.dir/Marble.cpp.o -o lab11   -L/usr/local/lib  -Wl,-rpath,/usr/local/lib -lGL -lglfw3 -lGLEW -lX11 -lstbimage 
+/usr/bin/c++ CMakeFiles/lab11.dir/main.cpp.o CMakeFiles/lab11.dir/FPEngine.cpp.o CMakeFiles/lab11.dir/Marble.cpp.o -o lab11   -L/usr/local/lib  -Wl,-rpath,/usr/local/lib -lGL -lglfw3 -lGLEW -lX11 -lstbimage 
