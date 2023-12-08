@@ -437,16 +437,20 @@ void FPEngine::_updateScene() {
     float side = 0;
     float front = 0;
     if(_keys[GLFW_KEY_D]){
-        side += 0.1;
+        side -= sin(_arcballCam->getTheta())*0.1;
+        front -= cos(_arcballCam->getTheta())*0.1;
     }
     if(_keys[GLFW_KEY_A]){
-        side -= 0.1;
+        side += sin(_arcballCam->getTheta())*0.1;
+        front += cos(_arcballCam->getTheta())*0.1;
     }
     if(_keys[GLFW_KEY_W]){
-        front += 0.1;
+        side += cos(_arcballCam->getTheta())*0.1;
+        front -= sin(_arcballCam->getTheta())*0.1;
     }
     if(_keys[GLFW_KEY_S]){
-        front -= 0.1;
+        side -= cos(_arcballCam->getTheta())*0.1;
+        front += sin(_arcballCam->getTheta())*0.1;
     }
     moveBCP(side, front);
     _collideMarblesWithWall();
