@@ -64,9 +64,9 @@ void main() {
   DirLight dLight;
   dLight.direction = vec3(0.1,-1.0,0.1);
 
-  dLight.ambient = vec3(0.2,0.2,0.2);
-  dLight.diffuse = vec3(0.4,0.4,0.4);
-  dLight.specular = vec3(0.5,0.5,0.5);
+  dLight.ambient = vec3(0.2,0.2,0.05);
+  dLight.diffuse = vec3(0.4,0.4,0.1);
+  dLight.specular = vec3(0.5,0.5,0.125);
 
   //*************************
   vec3 lightDir = vec3(0,0.5,0);
@@ -82,12 +82,13 @@ void main() {
     vec3 pLightResult = CalcPointLight(pLight,normal,FragPos,viewDir);
     vec3 dLightResult = CalcDirLight(dLight,normal,viewDir);
     vec4 result = vec4(dLightResult+pLightResult,1.0);
+
     intensity = (result.x*0.21 + result.y*0.72 + result.z*0.07);
     if (intensity > 0.95) colorCel = toonShadeColor*0.9;
     else if (intensity > 0.75) colorCel = toonShadeColor * 0.75;
     else if (intensity > 0.5) colorCel = toonShadeColor * 0.6;
     else colorCel = toonShadeColor * 0.4;
-    fragColorOut = result*texColor*vec4(colorCel, 1.0);
+    fragColorOut = texColor*vec4(colorCel, 1.0);
   }
 
 }

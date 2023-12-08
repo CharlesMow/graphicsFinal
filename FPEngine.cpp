@@ -510,6 +510,18 @@ void FPEngine::run() {
 void FPEngine::moveBCP(float side, float front){
     bcp_X += front;
     bcp_Z += side;
+    if(bcp_X > _groundSize){
+        bcp_X = _groundSize;
+    }
+    else if (bcp_X < -_groundSize){
+        bcp_X = -_groundSize;
+    }
+    if(bcp_Z > _groundSize){
+        bcp_Z = _groundSize;
+    }
+    else if (bcp_Z < -_groundSize){
+        bcp_Z = -_groundSize;
+    }
 }
 
 void FPEngine::moveToBcp(){
