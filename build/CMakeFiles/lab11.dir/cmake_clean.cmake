@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/lab11.dir/Lab11Engine.cpp.o"
-  "CMakeFiles/lab11.dir/Lab11Engine.cpp.o.d"
+  "CMakeFiles/lab11.dir/FPEngine.cpp.o"
+  "CMakeFiles/lab11.dir/FPEngine.cpp.o.d"
   "CMakeFiles/lab11.dir/Marble.cpp.o"
   "CMakeFiles/lab11.dir/Marble.cpp.o.d"
   "CMakeFiles/lab11.dir/main.cpp.o"

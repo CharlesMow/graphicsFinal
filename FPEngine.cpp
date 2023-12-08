@@ -42,7 +42,42 @@ void FPEngine::handleKeyEvent(GLint key, GLint action) {
             default: break; // suppress CLion warning
         }
     }
+    if (_keys[GLFW_KEY_1]){
+        _currentCamera = 1;
+    }
+    if (_keys[GLFW_KEY_2]){
+        _currentCamera = 2;
+    }
+
+    // turn camera right
+    if( _keys[GLFW_KEY_RIGHT] ) {
+        _pFreeCam->rotate(_cameraSpeed.y, 0.0f);
+    }
+    // turn camera left
+    if(_keys[GLFW_KEY_LEFT] ) {
+        _pFreeCam->rotate(-_cameraSpeed.y, 0.0f);
+    }
+    // pitch camera up
+    if(  _keys[GLFW_KEY_UP] ) {
+        _pFreeCam->rotate(0.0f, _cameraSpeed.y);
+    }
+    // pitch camera down
+    if( _keys[GLFW_KEY_DOWN] ) {
+        _pFreeCam->rotate(0.0f, -_cameraSpeed.y);
+    }
+    if( _keys[GLFW_KEY_SPACE] ) {
+        // go backward if shift held down
+        if( _keys[GLFW_KEY_RIGHT_SHIFT] || _keys[GLFW_KEY_LEFT_SHIFT] ) {
+            _pFreeCam->moveBackward(_cameraSpeed.x * 2.5);
+        }
+            // go forward
+        else {
+            _pFreeCam->moveForward(_cameraSpeed.x * 2.5);
+        }
+    }
+
 }
+
 
 void FPEngine::handleMouseButtonEvent(GLint button, GLint action) {
     // if the event is for the left mouse button
@@ -68,8 +103,14 @@ void FPEngine::handleCursorPositionEvent(glm::vec2 currMousePosition) {
         // otherwise, update our camera angles theta & phi
         else {
             // rotate the camera by the distance the mouse moved
-            _arcballCam->rotate((currMousePosition.x - _mousePosition.x) * 0.005f,
+            if (_currentCamera == 1){            
+                _arcballCam->rotate((currMousePosition.x - _mousePosition.x) * 0.005f,
                                 (_mousePosition.y - currMousePosition.y) * 0.005f);
+            }
+            else if(_currentCamera == 2){
+                _pFreeCam->rotate((currMousePosition.x - _mousePosition.x) * 0.005f,
+                                (_mousePosition.y - currMousePosition.y) * 0.005f );
+            }
         }
     }
     // passive motion
@@ -258,6 +299,12 @@ void FPEngine::mSetupScene() {
     _arcballCam->setPhi(1.9f );
     _arcballCam->setRadius( 15.0f );
     _arcballCam->recomputeOrientation();
+
+    _pFreeCam= new CSCI441::FreeCam();
+    _pFreeCam->setPosition(glm::vec3(60.0f, 40.0f, 30.0f) );
+    _pFreeCam->setTheta(-M_PI / 3.0f );
+    _pFreeCam->setPhi(M_PI / 2.8f );
+    _pFreeCam->recomputeOrientation();
 }
 
 //*************************************************************************************
@@ -411,7 +458,13 @@ void FPEngine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     //***************************************************************************
     // Draw Marbles
     _wavyShaderProgram->useProgram();
-    _wavyShaderProgram->setProgramUniform(_wavyShaderProgramUniformLocations.viewPos, _arcballCam->getPosition());
+    if(_currentCamera == 1){
+        _wavyShaderProgram->setProgramUniform(_wavyShaderProgramUniformLocations.viewPos, _arcballCam->getPosition());
+    }
+    else{
+        _wavyShaderProgram->setProgramUniform(_wavyShaderProgramUniformLocations.viewPos, _pFreeCam->getPosition());
+
+    }
     _wavyShaderProgram->setProgramUniform(_wavyShaderProgramUniformLocations.pLightPos, glm::vec3(bcp_X, 0.0, bcp_Z));
     glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::FISH_TEX] );
     glProgramUniform3f(_wavyShaderProgram->getShaderProgramHandle(),
@@ -489,10 +542,21 @@ void FPEngine::run() {
         glm::mat4 projectionMatrix = glm::perspective( 45.0f, (GLfloat) framebufferWidth / (GLfloat) framebufferHeight, 0.001f, 1000.0f );
 
         // set up our look at matrix to position our camera
-        glm::mat4 viewMatrix = _arcballCam->getViewMatrix();
+
+        glm::mat4 viewMatrix = glm::mat4(1.0);
 
         // draw everything to the window
+        switch (_currentCamera) {
+            case 1:
+                viewMatrix = _arcballCam->getViewMatrix();
+                //send camera position to get view direction
+                break;
+            case 2:
+                viewMatrix = _pFreeCam->getViewMatrix();
+                break;
+        }
         _renderScene(viewMatrix, projectionMatrix);
+
 
         // animate the scene
         _updateScene();

@@ -1,6 +1,7 @@
 #ifndef LAB11_LAB11_ENGINE_H
 #define LAB11_LAB11_ENGINE_H
 
+#include <CSCI441/FreeCam.hpp>
 #include <CSCI441/ArcballCam.hpp>
 #include <CSCI441/OpenGLEngine.hpp>
 #include <CSCI441/ShaderProgram.hpp>
@@ -32,6 +33,7 @@ public:
     /// \desc handle any cursor movement events inside the engine
     /// \param currMousePosition the current cursor position
     void handleCursorPositionEvent(glm::vec2 currMousePosition);
+    void handleCursorPositionEventFreeCam(glm::vec2 currMousePosition);
 
     /// \desc handle any scroll events inside the engine
     /// \param offset the current scroll offset
@@ -88,6 +90,12 @@ private:
 
     /// \desc the arcball camera in our world
     CSCI441::ArcballCam* _arcballCam;
+
+    /// \desc the arcball camera in our world
+    CSCI441::FreeCam* _pFreeCam;
+
+    int _currentCamera = 1;
+    glm::vec2 _cameraSpeed = glm::vec2(1.0,1.0);
 
     //***************************************************************************
     // VAO & Object Information
