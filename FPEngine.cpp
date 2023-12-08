@@ -40,19 +40,6 @@ void FPEngine::handleKeyEvent(GLint key, GLint action) {
             case GLFW_KEY_ESCAPE:
                 setWindowShouldClose();
                 break;
-            case GLFW_KEY_W:
-                moveForward();
-                break;
-            case GLFW_KEY_S:
-                moveBackward();
-                break;
-            case GLFW_KEY_A:
-                moveLeft();
-                break;
-            case GLFW_KEY_D:
-                moveRight();
-                break;
-
             default: break; // suppress CLion warning
         }
     }
@@ -447,7 +434,21 @@ void FPEngine::_updateScene() {
 
     _moveMarbles();
     moveToBcp();
-
+    float side = 0;
+    float front = 0;
+    if(_keys[GLFW_KEY_D]){
+        side += 0.1;
+    }
+    if(_keys[GLFW_KEY_A]){
+        side -= 0.1;
+    }
+    if(_keys[GLFW_KEY_W]){
+        front += 0.1;
+    }
+    if(_keys[GLFW_KEY_S]){
+        front -= 0.1;
+    }
+    moveBCP(side, front);
     _collideMarblesWithWall();
     // _collideMarblesWithMarbles();
 
@@ -494,19 +495,10 @@ void FPEngine::run() {
 // Private Helper Functions
 
 
-void FPEngine::moveForward(){
-    bcp_X += 2.0;
+void FPEngine::moveBCP(float side, float front){
+    bcp_X += front;
+    bcp_Z += side;
 }
-void FPEngine::moveBackward(){
-    bcp_X -= 2.0;
-}
-void FPEngine::moveLeft(){
-    bcp_Z -= 2.0;
-}
-void FPEngine::moveRight(){
-    bcp_Z += 2.0;
-}
-
 
 void FPEngine::moveToBcp(){
 

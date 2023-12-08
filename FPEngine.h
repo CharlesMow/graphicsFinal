@@ -121,12 +121,8 @@ private:
     GLfloat bcp_X = 0;
     GLfloat bcp_Z = 0; 
 
-    void moveForward();
-    void moveBackward();
-    void moveLeft();
-    void moveRight();
     void moveToBcp();
-
+    void moveBCP(float side, float front);
 
     //***************************************************************************
     // Texture Information
