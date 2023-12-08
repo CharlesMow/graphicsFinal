@@ -1,4 +1,4 @@
-#include "Marble.h"
+#include "Sunfish.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -7,7 +7,7 @@
 
 #include <cstdlib>
 
-Marble::Marble()
+Sunfish::Sunfish()
     : _rotation(0.0f), _location(glm::vec3(0,0,0)), _direction(glm::vec3(1,0,0)),
       RADIUS(0.5f),
       SPEED(0.1f),
@@ -15,7 +15,7 @@ Marble::Marble()
 
 }
 
-Marble::Marble(glm::vec3 location, glm::vec3 direction, GLfloat radius )
+Sunfish::Sunfish(glm::vec3 location, glm::vec3 direction, GLfloat radius )
     : _rotation(0.0f), _location(location), _direction(direction),
       RADIUS(radius),
       SPEED(0.1f),
@@ -23,13 +23,13 @@ Marble::Marble(glm::vec3 location, glm::vec3 direction, GLfloat radius )
     _direction = glm::normalize( _direction );
 }
 
-glm::vec3 Marble::getLocation() const { return _location; }
-void Marble::setLocationX(GLfloat x) { _location.x = x; }
-void Marble::setLocationZ(GLfloat z) { _location.z = z; }
-glm::vec3 Marble::getDirection() const { return _direction; }
-void Marble::setDirection(glm::vec3 newDirection) { _direction = glm::normalize(newDirection); }
+glm::vec3 Sunfish::getLocation() const { return _location; }
+void Sunfish::setLocationX(GLfloat x) { _location.x = x; }
+void Sunfish::setLocationZ(GLfloat z) { _location.z = z; }
+glm::vec3 Sunfish::getDirection() const { return _direction; }
+void Sunfish::setDirection(glm::vec3 newDirection) { _direction = glm::normalize(newDirection); }
 
-void Marble::draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+void Sunfish::draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
                    GLint shouldMoveUniformLocation,
                    GLint modelMatrixUniformLocation,
                    GLint typeBodyPart, glm::mat4 modelMtx, glm::mat4 projViewMtx ) {
@@ -49,7 +49,7 @@ void Marble::draw( CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocati
 
 }
 
-void Marble::_drawBody(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+void Sunfish::_drawBody(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
                        GLint typeBodyPart, GLint modelMatrixUniformLocation,
                        glm::mat4 modelMtx, glm::mat4 projViewMtx) const{
     modelMtx = glm::scale ( modelMtx, glm::vec3(1.5, 1, 1));
@@ -92,7 +92,7 @@ void Marble::_drawBody(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLo
     CSCI441::drawSolidDisk(0, RADIUS*0.875, 16, 16);
 }
 
-void Marble::_drawFins(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+void Sunfish::_drawFins(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
                        GLint typeBodyPart, GLint modelMatrixUniformLocation,
                        glm::mat4 modelMtx, glm::mat4 projViewMtx) const{
     modelMtx = glm::translate( modelMtx, glm::vec3(0,0,0.4));
@@ -116,7 +116,7 @@ void Marble::_drawFins(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLo
     CSCI441::drawSolidCylinder( RADIUS/2, RADIUS/4, RADIUS, 16, 16);
 }
 
-void Marble::_drawEyes(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
+void Sunfish::_drawEyes(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLocation, GLint colorUniformLocation,
                        GLint modelMatrixUniformLocation,
                        glm::mat4 modelMtx, glm::mat4 projViewMtx) const {
     shaderProgram->setProgramUniform(colorUniformLocation, glm::vec3(0,0,0) );
@@ -131,14 +131,14 @@ void Marble::_drawEyes(CSCI441::ShaderProgram *shaderProgram, GLint mvpUniformLo
     shaderProgram->setProgramUniform( modelMatrixUniformLocation, modelMtx );
     CSCI441::drawSolidSphere( 0.2, 16, 16 );
 }
-void Marble::moveForward() {
+void Sunfish::moveForward() {
     _location += _direction * SPEED;
 }
 
-void Marble::moveBackward() {
+void Sunfish::moveBackward() {
     _location -= _direction * SPEED;
 }
 
-GLfloat Marble::_genRandColor() {
+GLfloat Sunfish::_genRandColor() {
     return (GLfloat)(rand() * 100 % 50) / 100.0f + 0.5f;
 }

@@ -168,32 +168,32 @@ FPEngine.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/FPEngine.cpp.s
 .PHONY : FPEngine.cpp.s
 
-Marble.obj: Marble.cpp.obj
+Sunfish.obj: Sunfish.cpp.obj
 
-.PHONY : Marble.obj
+.PHONY : Sunfish.obj
 
 # target to build an object file
-Marble.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/Marble.cpp.obj
-.PHONY : Marble.cpp.obj
+Sunfish.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/Sunfish.cpp.obj
+.PHONY : Sunfish.cpp.obj
 
-Marble.i: Marble.cpp.i
+Sunfish.i: Sunfish.cpp.i
 
-.PHONY : Marble.i
+.PHONY : Sunfish.i
 
 # target to preprocess a source file
-Marble.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/Marble.cpp.i
-.PHONY : Marble.cpp.i
+Sunfish.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/Sunfish.cpp.i
+.PHONY : Sunfish.cpp.i
 
-Marble.s: Marble.cpp.s
+Sunfish.s: Sunfish.cpp.s
 
-.PHONY : Marble.s
+.PHONY : Sunfish.s
 
 # target to generate assembly for a file
-Marble.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/Marble.cpp.s
-.PHONY : Marble.cpp.s
+Sunfish.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/Sunfish.cpp.s
+.PHONY : Sunfish.cpp.s
 
 main.obj: main.cpp.obj
 
@@ -234,9 +234,9 @@ help:
 	@echo ... FPEngine.obj
 	@echo ... FPEngine.i
 	@echo ... FPEngine.s
-	@echo ... Marble.obj
-	@echo ... Marble.i
-	@echo ... Marble.s
+	@echo ... Sunfish.obj
+	@echo ... Sunfish.i
+	@echo ... Sunfish.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

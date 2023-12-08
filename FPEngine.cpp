@@ -207,7 +207,7 @@ void FPEngine::mSetupBuffers() {
     //***************************************************************************
     // Ground Plane generation
     _groundSize = 100.0f;
-    _marbleRadius = 1.0f;
+    _fishRadius = 1.0f;
 
     GLfloat platformSize = _groundSize;
 
@@ -236,26 +236,24 @@ void FPEngine::mSetupBuffers() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof( quadIndices ), quadIndices, GL_STATIC_DRAW );
 
     //***************************************************************************
-    // Marbles generation
+    // fis s generation
 
     srand( time(0) );
 
-    fprintf( stdout, "How many marbles do you wish to create? " );
-    fflush(stdout);
-    fscanf( stdin, "%d", &_numMarbles );
+    _numFish = 50;
 
     const GLfloat RANGE_X = _groundSize * 2.0f;
     const GLfloat RANGE_Z = _groundSize * 2.0f;
-    _marbles = (Marble**)malloc(sizeof(Marble*) * _numMarbles);
-    for(unsigned int i = 0; i < _numMarbles; i++) {
+    _fish = (Sunfish**)malloc(sizeof(Sunfish*) * _numFish);
+    for(unsigned int i = 0; i < _numFish; i++) {
         glm::vec3 randomPosition(rand()/(GLfloat)RAND_MAX * RANGE_X - RANGE_X/2.0f,
                                  0.0f,
-                                 (i/(GLfloat)_numMarbles) * RANGE_Z - RANGE_Z/2.0f);
+                                 (i/(GLfloat)_numFish) * RANGE_Z - RANGE_Z / 2.0f);
         glm::vec3 randomDirection(rand()/(GLfloat)RAND_MAX,
                                   0.0,
                                   rand()/(GLfloat)RAND_MAX);
-        GLfloat randomRadius = _marbleRadius * (rand()/(GLfloat)RAND_MAX + 0.25f);
-        _marbles[i] = new Marble(randomPosition, randomDirection, randomRadius);
+        GLfloat randomRadius = _fishRadius * (rand() / (GLfloat)RAND_MAX + 0.25f);
+        _fish[i] = new Sunfish(randomPosition, randomDirection, randomRadius);
     }
 }
 
@@ -330,9 +328,9 @@ void FPEngine::mCleanupBuffers() {
     glDeleteBuffers( NUM_VAOS, _ibos );
 
     fprintf( stdout, "[INFO]: ...deleting models..\n" );
-    for(unsigned int i = 0; i < _numMarbles; i++)
-        delete _marbles[i];
-    free( _marbles );
+    for(unsigned int i = 0; i < _numFish; i++)
+        delete _fish[i];
+    free(_fish );
 }
 
 void FPEngine::mCleanupTextures() {
@@ -456,7 +454,7 @@ void FPEngine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     mvpMatrix = projectionViewMatrix * modelMatrix;
 
     //***************************************************************************
-    // Draw Marbles
+    // Draw fis s
     _wavyShaderProgram->useProgram();
     if(_currentCamera == 1){
         _wavyShaderProgram->setProgramUniform(_wavyShaderProgramUniformLocations.viewPos, _arcballCam->getPosition());
@@ -471,20 +469,20 @@ void FPEngine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
                        _wavyShaderProgramUniformLocations.color, 0.0,0.0,1.0);
     glProgramUniform1f(_wavyShaderProgram->getShaderProgramHandle(),
                        _wavyShaderProgramUniformLocations.time,glfwGetTime());
-    for(unsigned int i = 0; i < _numMarbles; i++) {
-        _marbles[i]->draw( _wavyShaderProgram,
-                           _wavyShaderProgramUniformLocations.mvpMatrix,
-                           _wavyShaderProgramUniformLocations.color,
-                           _wavyShaderProgramUniformLocations.shouldMove,
-                           _wavyShaderProgramUniformLocations.modelMatrix,
-                           _wavyShaderProgramUniformLocations.typeBodyPart,
-                           modelMatrix, projectionViewMatrix );
+    for(unsigned int i = 0; i < _numFish; i++) {
+        _fish[i]->draw(_wavyShaderProgram,
+                       _wavyShaderProgramUniformLocations.mvpMatrix,
+                       _wavyShaderProgramUniformLocations.color,
+                       _wavyShaderProgramUniformLocations.shouldMove,
+                       _wavyShaderProgramUniformLocations.modelMatrix,
+                       _wavyShaderProgramUniformLocations.typeBodyPart,
+                       modelMatrix, projectionViewMatrix );
     }
 }
 
 void FPEngine::_updateScene() {
 
-    _moveMarbles();
+    _moveFish();
     moveToBcp();
     //camera and bcp movement
     float side = 0;
@@ -514,8 +512,7 @@ void FPEngine::_updateScene() {
     moveBCP(side, front);
     _arcballCam->setLookAtPoint(glm::vec3(bcp_X, 0, bcp_Z));
     _arcballCam->recomputeOrientation();
-    _collideMarblesWithWall();
-    // _collideMarblesWithMarbles();
+    _collideFishWithWall();
 
 }
 
@@ -590,17 +587,17 @@ void FPEngine::moveBCP(float side, float front){
 
 void FPEngine::moveToBcp(){
 
-    for( unsigned int i = 0; i < _numMarbles; i++){
+    for(unsigned int i = 0; i < _numFish; i++){
         glm::vec3 collision = glm::vec3(0.0f);
 
-        for( unsigned int j = 0; j < _numMarbles; j++){
+        for(unsigned int j = 0; j < _numFish; j++){
             if(i == j){continue;}
             
-            GLfloat distance = sqrt( pow((_marbles[j]->getLocation().x - _marbles[i]->getLocation().x),2) + pow((_marbles[j]->getLocation().y - _marbles[i]->getLocation().y),2) + pow((_marbles[j]->getLocation().z - _marbles[i]->getLocation().z),2)  );
+            GLfloat distance = sqrt(pow((_fish[j]->getLocation().x - _fish[i]->getLocation().x), 2) + pow((_fish[j]->getLocation().y - _fish[i]->getLocation().y), 2) + pow((_fish[j]->getLocation().z - _fish[i]->getLocation().z), 2)  );
             if(distance < 1.0f){
-                collision = collision - (_marbles[j]->getLocation() - _marbles[i]->getLocation());
-                // _marbles[i]->setLocationX(_marbles[i]->getLocation().x + 1.0);
-                // _marbles[i]->setLocationX(_marbles[i]->getLocation().z + 1.0);
+                collision = collision - (_fish[j]->getLocation() - _fish[i]->getLocation());
+                // _fish[i]->setLocationX(_fish[i]->getLocation().x + 1.0);
+                // _fish[i]->setLocationX(_fish[i]->getLocation().z + 1.0);
 
             }
         }
@@ -609,83 +606,83 @@ void FPEngine::moveToBcp(){
 
         collision = glm::vec3(collision.x, collision.y, collision.z);
 
-        glm::vec3 temp = _marbles[i]->getLocation();
+        glm::vec3 temp = _fish[i]->getLocation();
         glm::vec3 newDirection = temp - glm::vec3(bcp_X, 1.0, bcp_Z);
 
-        newDirection = (_marbles[i]->getDirection() - (newDirection * 0.01f));
-        _marbles[i]->setDirection(newDirection + collision);
+        newDirection = (_fish[i]->getDirection() - (newDirection * 0.01f));
+        _fish[i]->setDirection(newDirection + collision);
     }
 }
 
-void FPEngine::_moveMarbles() {
+void FPEngine::_moveFish() {
     //  TODO #1: move every ball forward along its heading
-    for( int i = 0; i < _numMarbles; i++){
-        _marbles[i]->moveForward();
+    for(int i = 0; i < _numFish; i++){
+        _fish[i]->moveForward();
     }
 
 }
 
-void FPEngine::_collideMarblesWithWall() {
-    // TODO #2: check if each marble has hit any wall
+void FPEngine::_collideFishWithWall() {
+    // TODO #2: check if each fish has hit any wall
 
-    for( int i = 0; i < _numMarbles; i++){
-        if (_marbles[i]->getLocation().x > _groundSize || _marbles[i]->getLocation().x < -_groundSize)
+    for(int i = 0; i < _numFish; i++){
+        if (_fish[i]->getLocation().x > _groundSize || _fish[i]->getLocation().x < -_groundSize)
         {
-            _marbles[i]->moveBackward();
-            _marbles[i]->moveBackward();
+            _fish[i]->moveBackward();
+            _fish[i]->moveBackward();
 
-            glm::vec3 vecOut = _marbles[i]->getDirection() - 2 * dot(_marbles[i]->getDirection(), glm::vec3(-1,0,0)) * glm::vec3(-1,0,0);
+            glm::vec3 vecOut = _fish[i]->getDirection() - 2 * dot(_fish[i]->getDirection(), glm::vec3(-1, 0, 0)) * glm::vec3(-1, 0, 0);
 
-            _marbles[i]->setDirection(vecOut);
+            _fish[i]->setDirection(vecOut);
         }
 
-        if (_marbles[i]->getLocation().z > _groundSize || _marbles[i]->getLocation().z < -_groundSize)
+        if (_fish[i]->getLocation().z > _groundSize || _fish[i]->getLocation().z < -_groundSize)
         {
-            _marbles[i]->moveBackward();
-            _marbles[i]->moveBackward();
-            glm::vec3 vecOut = _marbles[i]->getDirection() - 2 * dot(_marbles[i]->getDirection(), glm::vec3(0,0,-1)) * glm::vec3(0,0,-1);
+            _fish[i]->moveBackward();
+            _fish[i]->moveBackward();
+            glm::vec3 vecOut = _fish[i]->getDirection() - 2 * dot(_fish[i]->getDirection(), glm::vec3(0, 0, -1)) * glm::vec3(0, 0, -1);
 
-            _marbles[i]->setDirection(vecOut);
+            _fish[i]->setDirection(vecOut);
         }
     }
 
 }
 
-void FPEngine::_collideMarblesWithMarbles() {
+void FPEngine::_collideFishWithFish() {
     // TODO #3: check for interball collisions
     // warning this isn't perfect...balls can get caught and
     // continually bounce back-and-forth in place off
     // each other
-    for( int i = 0; i < _numMarbles; i++){
-        for(int j = 0; j < _numMarbles; j++){
+    for(int i = 0; i < _numFish; i++){
+        for(int j = 0; j < _numFish; j++){
             if(i == j){
                 continue;
             }
 
-            float currentDistance = sqrt(pow((_marbles[j]->getLocation().x - _marbles[i]->getLocation().x),2) + pow((_marbles[j]->getLocation().z - _marbles[i]->getLocation().z),2));
-            float radDistance = _marbles[j]->RADIUS + _marbles[i]->RADIUS;
+            float currentDistance = sqrt(pow((_fish[j]->getLocation().x - _fish[i]->getLocation().x), 2) + pow((_fish[j]->getLocation().z - _fish[i]->getLocation().z), 2));
+            float radDistance = _fish[j]->RADIUS + _fish[i]->RADIUS;
 
             if ( currentDistance < radDistance){
-                    _marbles[i]->moveBackward();
-                    _marbles[j]->moveBackward();
+                    _fish[i]->moveBackward();
+                    _fish[j]->moveBackward();
 
                 // change direction of the first ball 
-                glm::vec3 firstNormal = _marbles[j]->getLocation() - _marbles[i]->getLocation();
+                glm::vec3 firstNormal = _fish[j]->getLocation() - _fish[i]->getLocation();
                 //make the normal a unit vec
                 // firstNormal = 
-                glm::vec3 vecOut = _marbles[i]->getDirection() - 2 * dot(_marbles[i]->getDirection(), firstNormal) * firstNormal;
+                glm::vec3 vecOut = _fish[i]->getDirection() - 2 * dot(_fish[i]->getDirection(), firstNormal) * firstNormal;
 
-                _marbles[i]->setDirection(vecOut);
+                _fish[i]->setDirection(vecOut);
 
                 // change direction of the second ball 
-                glm::vec3 secondNormal = _marbles[i]->getLocation() - _marbles[j]->getLocation();
-                glm::vec3 vecOut2 = _marbles[j]->getDirection() - 2 * dot(_marbles[j]->getDirection(), secondNormal) * secondNormal;
+                glm::vec3 secondNormal = _fish[i]->getLocation() - _fish[j]->getLocation();
+                glm::vec3 vecOut2 = _fish[j]->getDirection() - 2 * dot(_fish[j]->getDirection(), secondNormal) * secondNormal;
 
-                _marbles[j]->setDirection(vecOut2);
+                _fish[j]->setDirection(vecOut2);
 
 
-                    _marbles[i]->moveForward();
-                    _marbles[j]->moveForward();
+                    _fish[i]->moveForward();
+                    _fish[j]->moveForward();
             }
         }
 

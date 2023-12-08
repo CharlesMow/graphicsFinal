@@ -6,7 +6,7 @@
 #include <CSCI441/OpenGLEngine.hpp>
 #include <CSCI441/ShaderProgram.hpp>
 
-#include "Marble.h"
+#include "Sunfish.h"
 
 class FPEngine : public CSCI441::OpenGLEngine {
 public:
@@ -116,12 +116,16 @@ private:
     /// \desc the number of points that make up our VAO
     GLsizei _numVAOPoints[NUM_VAOS];
 
-    /// \desc stores the particle system of marbles
-    Marble** _marbles = nullptr;
-    /// \desc the number of marbles in the marbles array
-    GLuint _numMarbles;
-    /// \desc the size of each of our marbles
-    GLfloat _marbleRadius;
+    /// \desc stores the particle system of fish
+
+    Sunfish** _fish = nullptr;
+    /// \desc the number of fish
+    /// in the fish
+    /// array
+    GLuint _numFish;
+    /// \desc the size of each of our fish
+
+    GLfloat _fishRadius;
     /// \desc the size of our ground plane
     GLfloat _groundSize;
 
@@ -141,7 +145,8 @@ private:
     enum TEXTURES {
         /// \desc the ground plane
         PLATFORM_TEX = 0,
-        /// \desc our marble spheres
+        /// \desc our fish
+        /// spheres
         FISH_TEX = 1,
         POS_X = 2,
         NEG_X = 3,
@@ -202,12 +207,15 @@ private:
         GLfloat s, t;
     };
 
-    /// \desc moves every marble one step forward
-    void _moveMarbles();
-    /// \desc checks if each marble has collided with any wall
-    void _collideMarblesWithWall();
-    /// \desc checks if any two marbles have collided with each other
-    void _collideMarblesWithMarbles();
+    /// \desc moves every fish
+    /// one step forward
+    void _moveFish();
+    /// \desc checks if each fish
+    /// has collided with any wall
+    void _collideFishWithWall();
+    /// \desc checks if any two fish
+    /// have collided with each other
+    void _collideFishWithFish();
     void drawSkybox(glm::mat4 projMtx) const;
 };
 

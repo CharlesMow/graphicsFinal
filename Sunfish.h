@@ -1,5 +1,5 @@
-#ifndef LAB11_MARBLE_H
-#define LAB11_MARBLE_H
+#ifndef LAB11_SUNFISH_H
+#define LAB11_SUNFISH_H
 
 #include <glm/glm.hpp>
 
@@ -7,17 +7,17 @@
 
 #include <CSCI441/ShaderProgram.hpp>
 
-/// \class Marble
+/// \class Sunfish
 /// \desc Stores the information for a colored sphere that has a position, direction, size, and orientation
-class Marble {
+class Sunfish {
 public:
-    /// \desc creates a Marble of unit size at the origin moving along X with a random color
-    Marble();
-    /// \desc creates a Marble for the given specifications with random color
-    /// \param location location the Marble begins at
-    /// \param direction direction the Marble is initially moving
+    /// \desc creates a Sunfish of unit size at the origin moving along X with a random color
+    Sunfish();
+    /// \desc creates a Sunfish for the given specifications with random color
+    /// \param location location the Sunfish begins at
+    /// \param direction direction the Sunfish is initially moving
     /// \param radius radius of the marble
-    Marble(glm::vec3 location, glm::vec3 direction, GLfloat radius );
+    Sunfish(glm::vec3 location, glm::vec3 direction, GLfloat radius );
 
     /// \desc radius of the sphere
     const GLfloat RADIUS;
@@ -83,4 +83,4 @@ private:
                    glm::mat4 modelMtx, glm::mat4 projViewMtx) const;
 };
 
-#endif // LAB11_MARBLE_H
+#endif // LAB11_SUNFISH_H
