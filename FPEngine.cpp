@@ -527,10 +527,10 @@ void FPEngine::moveToBcp(){
 
 
 
-        collision = glm::vec3(collision.x, 0.0f, collision.z);
+        collision = glm::vec3(collision.x, collision.y, collision.z);
 
         glm::vec3 temp = _marbles[i]->getLocation();
-        glm::vec3 newDirection = temp - glm::vec3(bcp_X, 0.0, bcp_Z);
+        glm::vec3 newDirection = temp - glm::vec3(bcp_X, 1.0, bcp_Z);
 
         newDirection = (_marbles[i]->getDirection() - (newDirection * 0.01f));
         _marbles[i]->setDirection(newDirection + collision);
