@@ -141,32 +141,32 @@ lab11/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/build
 .PHONY : lab11/fast
 
-Lab11Engine.obj: Lab11Engine.cpp.obj
+FPEngine.obj: FPEngine.cpp.obj
 
-.PHONY : Lab11Engine.obj
+.PHONY : FPEngine.obj
 
 # target to build an object file
-Lab11Engine.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/Lab11Engine.cpp.obj
-.PHONY : Lab11Engine.cpp.obj
+FPEngine.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/FPEngine.cpp.obj
+.PHONY : FPEngine.cpp.obj
 
-Lab11Engine.i: Lab11Engine.cpp.i
+FPEngine.i: FPEngine.cpp.i
 
-.PHONY : Lab11Engine.i
+.PHONY : FPEngine.i
 
 # target to preprocess a source file
-Lab11Engine.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/Lab11Engine.cpp.i
-.PHONY : Lab11Engine.cpp.i
+FPEngine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/FPEngine.cpp.i
+.PHONY : FPEngine.cpp.i
 
-Lab11Engine.s: Lab11Engine.cpp.s
+FPEngine.s: FPEngine.cpp.s
 
-.PHONY : Lab11Engine.s
+.PHONY : FPEngine.s
 
 # target to generate assembly for a file
-Lab11Engine.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/Lab11Engine.cpp.s
-.PHONY : Lab11Engine.cpp.s
+FPEngine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab11.dir\build.make CMakeFiles/lab11.dir/FPEngine.cpp.s
+.PHONY : FPEngine.cpp.s
 
 Marble.obj: Marble.cpp.obj
 
@@ -231,9 +231,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... lab11
-	@echo ... Lab11Engine.obj
-	@echo ... Lab11Engine.i
-	@echo ... Lab11Engine.s
+	@echo ... FPEngine.obj
+	@echo ... FPEngine.i
+	@echo ... FPEngine.s
 	@echo ... Marble.obj
 	@echo ... Marble.i
 	@echo ... Marble.s

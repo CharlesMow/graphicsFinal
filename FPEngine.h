@@ -7,12 +7,12 @@
 
 #include "Marble.h"
 
-class Lab11Engine : public CSCI441::OpenGLEngine {
+class FPEngine : public CSCI441::OpenGLEngine {
 public:
     //***************************************************************************
     // Engine Interface
 
-    Lab11Engine();
+    FPEngine();
 
     void run() final;
 
@@ -173,6 +173,8 @@ private:
         GLint typeBodyPart;
         GLint diffuseMap;
         GLint time;
+        GLint viewPos;
+        GLint pLightPos;
     } _wavyShaderProgramUniformLocations;
     /// \desc stores the locations of all of our shader attributes
     struct TextureShaderProgramAttributeLocations {

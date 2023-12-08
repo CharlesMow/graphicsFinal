@@ -1,4 +1,4 @@
-#include "Lab11Engine.h"
+#include "FPEngine.h"
 
 #include <CSCI441/objects.hpp>
 #include <CSCI441/TextureUtils.hpp>
@@ -18,7 +18,7 @@
 //
 // Public Interface
 
-Lab11Engine::Lab11Engine()
+FPEngine::FPEngine()
          : CSCI441::OpenGLEngine(4, 1,
                                  640, 480,
                                  "Lab11: Collision Detection") {
@@ -29,7 +29,7 @@ Lab11Engine::Lab11Engine()
     _leftMouseButtonState = GLFW_RELEASE;
 }
 
-void Lab11Engine::handleKeyEvent(GLint key, GLint action) {
+void FPEngine::handleKeyEvent(GLint key, GLint action) {
     if(key != GLFW_KEY_UNKNOWN)
         _keys[key] = ((action == GLFW_PRESS) || (action == GLFW_REPEAT));
 
@@ -58,7 +58,7 @@ void Lab11Engine::handleKeyEvent(GLint key, GLint action) {
     }
 }
 
-void Lab11Engine::handleMouseButtonEvent(GLint button, GLint action) {
+void FPEngine::handleMouseButtonEvent(GLint button, GLint action) {
     // if the event is for the left mouse button
     if( button == GLFW_MOUSE_BUTTON_LEFT ) {
         // update the left mouse button's state
@@ -66,7 +66,7 @@ void Lab11Engine::handleMouseButtonEvent(GLint button, GLint action) {
     }
 }
 
-void Lab11Engine::handleCursorPositionEvent(glm::vec2 currMousePosition) {
+void FPEngine::handleCursorPositionEvent(glm::vec2 currMousePosition) {
     // if mouse hasn't moved in the window, prevent camera from flipping out
     if(fabs(_mousePosition.x - MOUSE_UNINITIALIZED) <= 0.000001f) {
         _mousePosition = currMousePosition;
@@ -95,7 +95,7 @@ void Lab11Engine::handleCursorPositionEvent(glm::vec2 currMousePosition) {
     _mousePosition = currMousePosition;
 }
 
-void Lab11Engine::handleScrollEvent(glm::vec2 offset) {
+void FPEngine::handleScrollEvent(glm::vec2 offset) {
     // update the camera radius in/out
     GLfloat totChgSq = offset.y;
     _arcballCam->moveForward( totChgSq * 0.2f );
@@ -105,7 +105,7 @@ void Lab11Engine::handleScrollEvent(glm::vec2 offset) {
 //
 // Engine Setup
 
-void Lab11Engine::mSetupGLFW() {
+void FPEngine::mSetupGLFW() {
     CSCI441::OpenGLEngine::mSetupGLFW();
 
     // set our callbacks
@@ -115,7 +115,7 @@ void Lab11Engine::mSetupGLFW() {
     glfwSetScrollCallback(mpWindow, lab11_scroll_callback);
 }
 
-void Lab11Engine::mSetupOpenGL() {
+void FPEngine::mSetupOpenGL() {
     glEnable( GL_DEPTH_TEST );					                    // enable depth testing
     glDepthFunc( GL_LESS );							                // use less than depth test
 
@@ -125,7 +125,7 @@ void Lab11Engine::mSetupOpenGL() {
     glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );	// clear the frame buffer to black
 }
 
-void Lab11Engine::mSetupShaders() {
+void FPEngine::mSetupShaders() {
     //***************************************************************************
     // Setup Gouraud Shader Program
 
@@ -143,6 +143,8 @@ void Lab11Engine::mSetupShaders() {
     _wavyShaderProgramUniformLocations.typeBodyPart = _wavyShaderProgram->getUniformLocation("typeBodyPart");
     _wavyShaderProgramUniformLocations.diffuseMap   = _wavyShaderProgram->getUniformLocation("diffuseMap");
     _wavyShaderProgramUniformLocations.modelMatrix = _wavyShaderProgram->getUniformLocation("modelMatrix");
+    _wavyShaderProgramUniformLocations.pLightPos = _wavyShaderProgram->getUniformLocation("pLightPos");
+    _wavyShaderProgramUniformLocations.viewPos = _wavyShaderProgram->getUniformLocation("viewPos");
     // get attribute locations
     _textureShaderProgramAttributeLocations.vPos       = _textureShaderProgram->getAttributeLocation("vPos");
     _textureShaderProgramAttributeLocations.vTexCoord  = _textureShaderProgram->getAttributeLocation("vTexCoord");
@@ -168,7 +170,7 @@ void Lab11Engine::mSetupShaders() {
                                          _wavyShaderProgramAttributeLocations.vTexCoord);
 }
 
-void Lab11Engine::mSetupBuffers() {
+void FPEngine::mSetupBuffers() {
     // --------------------------------------------------------------------------
     // generate all of our VAO/VBO/IBO descriptors
     glGenVertexArrays( NUM_VAOS, _vaos );
@@ -230,30 +232,39 @@ void Lab11Engine::mSetupBuffers() {
     }
 }
 
-void Lab11Engine::mSetupTextures() {
+void FPEngine::mSetupTextures() {
     // unused in this lab
 
     _textureHandles[TEXTURES::PLATFORM_TEX] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/water.PNG");
     _textureHandles[TEXTURES::MARBLE_TEX]   = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/sunfishSkin.png");
 
     // Skybox texture handles
-    _textureHandles[TEXTURES::POS_X] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/posx.jpg",
+    /*  POS_X   = +x    ft
+     *  NEG_X   = -x    bk
+     *
+     *  POS_Y   = +y    up
+     *  NEG_Y   = -y    dn
+     *
+     *  POS_Z   = +z    rt
+     *  NEG_Z   = -z    lf
+     */
+    _textureHandles[TEXTURES::POS_X] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/skybox/uw_ft.jpg",
                                                                                      GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
-    _textureHandles[TEXTURES::NEG_X] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/negx.jpg",
+    _textureHandles[TEXTURES::NEG_X] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/skybox/uw_bk.jpg",
                                                                                      GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
 
-    _textureHandles[TEXTURES::POS_Y] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/posy.jpg",
+    _textureHandles[TEXTURES::POS_Y] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/skybox/uw_up.jpg",
                                                                                      GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
-    _textureHandles[TEXTURES::NEG_Y] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/negy.jpg",
+    _textureHandles[TEXTURES::NEG_Y] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/skybox/uw_dn.jpg",
                                                                                      GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
 
-    _textureHandles[TEXTURES::POS_Z] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/posz.jpg",
+    _textureHandles[TEXTURES::POS_Z] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/skybox/uw_rt.jpg",
                                                                                      GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
-    _textureHandles[TEXTURES::NEG_Z] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/textures/negz.jpg",
+    _textureHandles[TEXTURES::NEG_Z] = CSCI441::TextureUtils::loadAndRegisterTexture("assets/skybox/uw_lf.jpg",
                                                                                      GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT,GL_FALSE);
 }
 
-void Lab11Engine::mSetupScene() {
+void FPEngine::mSetupScene() {
     // set up camera
     _arcballCam = new CSCI441::ArcballCam();
     _arcballCam->setLookAtPoint(glm::vec3(0.0f, 0.0f, 0.0f) );
@@ -267,13 +278,13 @@ void Lab11Engine::mSetupScene() {
 //
 // Engine Cleanup
 
-void Lab11Engine::mCleanupShaders() {
+void FPEngine::mCleanupShaders() {
     fprintf( stdout, "[INFO]: ...deleting Shaders.\n" );
     delete _textureShaderProgram;
     delete _wavyShaderProgram;
 }
 
-void Lab11Engine::mCleanupBuffers() {
+void FPEngine::mCleanupBuffers() {
     fprintf( stdout, "[INFO]: ...deleting VAOs....\n" );
     CSCI441::deleteObjectVAOs();
     glDeleteVertexArrays( NUM_VAOS, _vaos );
@@ -291,12 +302,12 @@ void Lab11Engine::mCleanupBuffers() {
     free( _marbles );
 }
 
-void Lab11Engine::mCleanupTextures() {
+void FPEngine::mCleanupTextures() {
     fprintf( stdout, "[INFO]: ...deleting Textures\n" );
     glDeleteTextures(NUM_TEXTURES, _textureHandles);
 }
 
-void Lab11Engine::mCleanupScene() {
+void FPEngine::mCleanupScene() {
     fprintf( stdout, "[INFO]: ...deleting scene...\n" );
     delete _arcballCam;
 }
@@ -304,7 +315,7 @@ void Lab11Engine::mCleanupScene() {
 //*************************************************************************************
 //
 // Rendering / Drawing Functions - this is where the magic happens!
-void Lab11Engine::drawSkybox(glm::mat4 projMtx) const{
+void FPEngine::drawSkybox(glm::mat4 projMtx) const{
     glm::vec3 white(1,1,1);
     _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.colorTint, white );
 
@@ -380,7 +391,7 @@ void Lab11Engine::drawSkybox(glm::mat4 projMtx) const{
     glBindVertexArray( _vaos[VAO_ID::PLATFORM] );
     glDrawElements( GL_TRIANGLE_STRIP, _numVAOPoints[VAO_ID::PLATFORM], GL_UNSIGNED_SHORT, (void*)0 );
 }
-void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
+void FPEngine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     // if either shader program is null, do not continue any further to prevent run time errors
     if(!_textureShaderProgram) {
         return;
@@ -402,9 +413,10 @@ void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     modelMatrix = glm::translate(modelMatrix, glm::vec3(bcp_X, 0.0, bcp_Z));
     mvpMatrix = projectionViewMatrix * modelMatrix;
     _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.mvpMatrix, mvpMatrix );
-
+    glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::MARBLE_TEX] );
     glm::vec3 yellow(1,1,0);
     _textureShaderProgram->setProgramUniform( _textureShaderProgramUniformLocations.colorTint, yellow );
+
     CSCI441::drawSolidSphere(1,16,16);
 
     modelMatrix = glm::mat4( 1.0f );
@@ -413,6 +425,8 @@ void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     //***************************************************************************
     // Draw Marbles
     _wavyShaderProgram->useProgram();
+    _wavyShaderProgram->setProgramUniform(_wavyShaderProgramUniformLocations.viewPos, _arcballCam->getPosition());
+    _wavyShaderProgram->setProgramUniform(_wavyShaderProgramUniformLocations.pLightPos, glm::vec3(bcp_X, 0.0, bcp_Z));
     glBindTexture( GL_TEXTURE_2D, _textureHandles[TEXTURES::MARBLE_TEX] );
     glProgramUniform3f(_wavyShaderProgram->getShaderProgramHandle(),
                        _wavyShaderProgramUniformLocations.color, 0.0,0.0,1.0);
@@ -429,7 +443,7 @@ void Lab11Engine::_renderScene(glm::mat4 viewMtx, glm::mat4 projMtx) const {
     }
 }
 
-void Lab11Engine::_updateScene() {
+void FPEngine::_updateScene() {
 
     _moveMarbles();
     moveToBcp();
@@ -439,7 +453,7 @@ void Lab11Engine::_updateScene() {
 
 }
 
-void Lab11Engine::run() {
+void FPEngine::run() {
     //  This is our draw loop - all rendering is done here.  We use a loop to keep the window open
     //	until the user decides to close the window and quit the program.  Without a loop, the
     //	window will display once and then the program exits.
@@ -480,21 +494,21 @@ void Lab11Engine::run() {
 // Private Helper Functions
 
 
-void Lab11Engine::moveForward(){
+void FPEngine::moveForward(){
     bcp_X += 2.0;
 }
-void Lab11Engine::moveBackward(){
+void FPEngine::moveBackward(){
     bcp_X -= 2.0;
 }
-void Lab11Engine::moveLeft(){
+void FPEngine::moveLeft(){
     bcp_Z -= 2.0;
 }
-void Lab11Engine::moveRight(){
+void FPEngine::moveRight(){
     bcp_Z += 2.0;
 }
 
 
-void Lab11Engine::moveToBcp(){
+void FPEngine::moveToBcp(){
 
     for( unsigned int i = 0; i < _numMarbles; i++){
         glm::vec3 collision = glm::vec3(0.0f);
@@ -523,7 +537,7 @@ void Lab11Engine::moveToBcp(){
     }
 }
 
-void Lab11Engine::_moveMarbles() {
+void FPEngine::_moveMarbles() {
     //  TODO #1: move every ball forward along its heading
     for( int i = 0; i < _numMarbles; i++){
         _marbles[i]->moveForward();
@@ -531,7 +545,7 @@ void Lab11Engine::_moveMarbles() {
 
 }
 
-void Lab11Engine::_collideMarblesWithWall() {
+void FPEngine::_collideMarblesWithWall() {
     // TODO #2: check if each marble has hit any wall
 
     for( int i = 0; i < _numMarbles; i++){
@@ -557,7 +571,7 @@ void Lab11Engine::_collideMarblesWithWall() {
 
 }
 
-void Lab11Engine::_collideMarblesWithMarbles() {
+void FPEngine::_collideMarblesWithMarbles() {
     // TODO #3: check for interball collisions
     // warning this isn't perfect...balls can get caught and
     // continually bounce back-and-forth in place off
@@ -603,7 +617,7 @@ void Lab11Engine::_collideMarblesWithMarbles() {
 // Callbacks
 
 void lab11_keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods ) {
-    auto engine = (Lab11Engine*) glfwGetWindowUserPointer(window);
+    auto engine = (FPEngine*) glfwGetWindowUserPointer(window);
 
     // ensure our engine is not null
     if(engine) {
@@ -613,7 +627,7 @@ void lab11_keyboard_callback(GLFWwindow *window, int key, int scancode, int acti
 }
 
 void lab11_cursor_callback(GLFWwindow *window, double x, double y ) {
-    auto engine = (Lab11Engine*) glfwGetWindowUserPointer(window);
+    auto engine = (FPEngine*) glfwGetWindowUserPointer(window);
 
     // ensure our engine is not null
     if(engine) {
@@ -623,7 +637,7 @@ void lab11_cursor_callback(GLFWwindow *window, double x, double y ) {
 }
 
 void lab11_mouse_button_callback(GLFWwindow *window, int button, int action, int mods ) {
-    auto engine = (Lab11Engine*) glfwGetWindowUserPointer(window);
+    auto engine = (FPEngine*) glfwGetWindowUserPointer(window);
 
     // ensure our engine is not null
     if(engine) {
@@ -633,7 +647,7 @@ void lab11_mouse_button_callback(GLFWwindow *window, int button, int action, int
 }
 
 void lab11_scroll_callback(GLFWwindow *window, double xOffset, double yOffset) {
-    auto engine = (Lab11Engine*) glfwGetWindowUserPointer(window);
+    auto engine = (FPEngine*) glfwGetWindowUserPointer(window);
 
     // ensure our engine is not null
     if(engine) {
